@@ -1,0 +1,13 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Faults>
+   <Fault>
+      <severity>warning</severity>
+      <loc>/*[namespace-uri()='http://docs.oasis-open.org/wsbpel/2.0/process/executable'][local-name()='process']/*[namespace-uri()='http://docs.oasis-open.org/wsbpel/2.0/process/executable'][local-name()='sequence'][@name='main']/*[namespace-uri()='http://docs.oasis-open.org/wsbpel/2.0/process/executable'][local-name()='scope'][@name='CalculatePaymentStatusScope']/*[namespace-uri()='http://docs.oasis-open.org/wsbpel/2.0/process/executable'][local-name()='assign'][@name='calculatePaymentStatus']/*[namespace-uri()='http://docs.oasis-open.org/wsbpel/2.0/process/executable'][local-name()='copy']/*[namespace-uri()='http://docs.oasis-open.org/wsbpel/2.0/process/executable'][local-name()='from']</loc>
+      <line>104</line>
+      <col/>
+      <file>BPEL/validatePaymentProcess.bpel</file>
+      <name>BPEL/validatePaymentProcess.bpel</name>
+      <fix>Declare the parameter in XSLT file or in the included/imported XSLT files. If the param has been declared, then change the parameter name used in the xpath function.</fix>
+      <msg>The param "inputVariable1.paymentInfo" used in xpath function doXSLTransformForDoc cannot be found in the XSLT. If it has been declared in the included/imported XSLT files, ignore this warning.</msg>
+   </Fault>
+</Faults>
