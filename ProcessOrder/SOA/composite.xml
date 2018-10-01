@@ -22,6 +22,8 @@
           location="WSDLs/writeOrderToDatabase.wsdl" importType="wsdl"/>
   <import namespace="http://xmlns.oracle.com/pcbpel/adapter/db/e2e-1201-composites/ProcessOrder/updateOrderStatus"
           location="WSDLs/updateOrderStatus.wsdl" importType="wsdl"/>
+  <import namespace="http://www.oracle.com/ValidatePayment" location="WSDLs/ValidatePS.wsdl" importType="wsdl"/>
+  <import namespace="http://www.oracle.com/ValidatePayment" location="WSDLs/ValidatePSWrapper.wsdl" importType="wsdl"/>
   <service name="receiveorder_client_ep" ui:wsdlLocation="WSDLs/ProcessOrderWrapper.wsdl">
     <interface.wsdl interface="http://www.oracle.com/ProcessOrder#wsdl.interface(processOrderPortType)"/>
     <binding.ws port="http://www.oracle.com/ProcessOrder#wsdl.endpoint(receiveorder_client_ep/processOrderPort)"/>
@@ -53,6 +55,9 @@
       <reference name="updateOrderStatus" ui:wsdlLocation="WSDLs/updateOrderStatus.wsdl">
         <interface.wsdl interface="http://xmlns.oracle.com/pcbpel/adapter/db/e2e-1201-composites/ProcessOrder/updateOrderStatus#wsdl.interface(updateOrderStatus_ptt)"/>
       </reference>
+      <reference name="validatePaymentService" ui:wsdlLocation="WSDLs/ValidatePSWrapper.wsdl">
+        <interface.wsdl interface="http://www.oracle.com/ValidatePayment#wsdl.interface(validatePaymentPortType)"/>
+      </reference>
     </componentType>
     <property name="bpel.config.transaction" type="xs:string" many="false">required</property>
     <property name="bpel.config.oneWayDeliveryPolicy" type="xs:string" many="false">async.persist</property>
@@ -73,6 +78,13 @@
     <property name="jca.retry.backoff" type="xs:int" many="false" override="may">2</property>
     <property name="jca.retry.maxInterval" type="xs:string" many="false" override="may">120</property>
   </reference>
+  <reference name="validatePaymentService" ui:wsdlLocation="WSDLs/ValidatePS.wsdl">
+    <interface.wsdl interface="http://www.oracle.com/ValidatePayment#wsdl.interface(validatePaymentPortType)"/>
+    <binding.ws port="http://www.oracle.com/ValidatePayment#wsdl.endpoint(validatePaymentBindingQSService/validatePaymentBindingQSPort)"
+                location="http://127.0.0.1:7101/sbresource?Proxy/ValidatePaymentSB%2FValidatePS" soapVersion="1.1">
+      <property name="weblogic.wsee.wsat.transaction.flowOption" type="xs:string" many="false">WSDLDriven</property>
+    </binding.ws>
+  </reference>
   <wire>
     <source.uri>receiveorder_client_ep</source.uri>
     <target.uri>receiveOrder/receiveorder_client</target.uri>
@@ -88,5 +100,9 @@
   <wire>
     <source.uri>validateAndProcessOrder/updateOrderStatus</source.uri>
     <target.uri>updateOrderStatus</target.uri>
+  </wire>
+  <wire>
+    <source.uri>validateAndProcessOrder/validatePaymentService</source.uri>
+    <target.uri>validatePaymentService</target.uri>
   </wire>
 </composite>

@@ -56,6 +56,8 @@
                  partnerRole="writeOrderToDatabase_role"/>
     <partnerLink name="updateOrderStatus" partnerLinkType="ns6:updateOrderStatus_plt"
                  partnerRole="updateOrderStatus_role"/>
+    <partnerLink name="validatePaymentService" partnerLinkType="ns5:validatePaymentService"
+                 partnerRole="validatePaymentPortType"/>
   </partnerLinks>
 
   <!-- 
@@ -73,6 +75,8 @@
         <variable name="test2" type="xsd:integer"/>
     <variable name="writeOrderToDB_insert_InputVariable" messageType="ns1:E2E1201_OrdersCollection_msg"/>
     <variable name="updateOrderStatus_update_InputVariable" messageType="ns6:E2E1201_OrdersCollection_msg"/>
+    <variable name="validatePayment_validate_InputVariable" messageType="ns5:validateInput"/>
+    <variable name="validatePayment_validate_OutputVariable" messageType="ns5:validateOutput"/>
   </variables>
 
   <!-- 
@@ -126,6 +130,22 @@
     <extensionActivity>
       <bpelx:dehydrate name="DehydrateInstance"/>
     </extensionActivity>
+    <assign name="assignPaymentInformation">
+      <copy>
+        <from>$order/ns2:Billing</from>
+        <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$validatePayment_validate_InputVariable.paymentInfo</to>
+      </copy>
+    </assign>
+    <invoke name="validatePayment" bpelx:invokeAsDetail="no" partnerLink="validatePaymentService"
+            portType="ns5:validatePaymentPortType" operation="validate"
+            inputVariable="validatePayment_validate_InputVariable"
+            outputVariable="validatePayment_validate_OutputVariable"/>
+    <assign name="setPaymentStatus">
+      <copy>
+        <from>$validatePayment_validate_OutputVariable.status/ns2:Status</from>
+        <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$order/ns2:Status</to>
+      </copy>
+    </assign>
     <scope name="updateOrderStatusScope">
       <sequence name="Sequence1">
         <assign name="assignOrderStatus">
