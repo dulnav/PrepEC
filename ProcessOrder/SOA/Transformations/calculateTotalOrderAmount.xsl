@@ -12,7 +12,7 @@
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 exclude-result-prefixes="xsd xsi oracle-xsl-mapper xsl ns0 xp20 xref mhdr oraext dvm socket"
                 xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
-                xmlns:tns="http://www.oracle.com/ProcessOrder">
+                xmlns:tns="http://www.oracle.com/ProcessOrder" xmlns:oraxsl="http://www.oracle.com/XSL/Transform/java">
     <oracle-xsl-mapper:schema>
         <!--SPECIFICATION OF MAP SOURCES AND TARGETS, DO NOT MODIFY.-->
         <oracle-xsl-mapper:mapSources>

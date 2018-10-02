@@ -34,6 +34,23 @@
          xmlns:ns1="http://xmlns.oracle.com/pcbpel/adapter/db/e2e-1201-composites/ProcessOrderTemplate/writeOrderToDatabase"
          xmlns:ns6="http://xmlns.oracle.com/pcbpel/adapter/db/e2e-1201-composites/ProcessOrder/updateOrderStatus"
          xmlns:ns7="http://xmlns.oracle.com/pcbpel/adapter/db/top/updateOrderStatus">
+  <bpelx:inlineSubProcess name="updateOrderStatusSP">
+    <sequence name="Sequence1">
+      <assign name="assignOrderStatus">
+        <copy>
+          <from>$order/ns2:OrderNumber</from>
+          <to>$updateOrderStatus_update_InputVariable.E2E1201_OrdersCollection/ns7:E2E1201_Orders/ns7:orderNumber</to>
+        </copy>
+        <copy>
+          <from>$order/ns2:Status</from>
+          <to>$updateOrderStatus_update_InputVariable.E2E1201_OrdersCollection/ns7:E2E1201_Orders/ns7:status</to>
+        </copy>
+      </assign>
+      <invoke name="updateOrderStatus" bpelx:invokeAsDetail="no" partnerLink="updateOrderStatus"
+              portType="ns6:updateOrderStatus_ptt" operation="update"
+              inputVariable="updateOrderStatus_update_InputVariable"/>
+    </sequence>
+  </bpelx:inlineSubProcess>
   <import namespace="http://xmlns.oracle.com/e2e_1201_composites/ProcessOrderTemplate/validateAndProcessOrder"
           location="../WSDLs/validateAndProcessOrder.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"
           ui:processWSDL="true"/>
@@ -142,26 +159,12 @@
             outputVariable="validatePayment_validate_OutputVariable"/>
     <assign name="setPaymentStatus">
       <copy>
-        <from>$validatePayment_validate_OutputVariable.status/ns2:Status</from>
-        <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$order/ns2:Status</to>
+        <from>$order/ns2:Billing</from>
+        <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$validatePayment_validate_InputVariable.paymentInfo</to>
       </copy>
     </assign>
-    <scope name="updateOrderStatusScope">
-      <sequence name="Sequence1">
-        <assign name="assignOrderStatus">
-          <copy>
-            <from>$order/ns2:OrderNumber</from>
-            <to>$updateOrderStatus_update_InputVariable.E2E1201_OrdersCollection/ns7:E2E1201_Orders/ns7:orderNumber</to>
-          </copy>
-          <copy>
-            <from>$order/ns2:Status</from>
-            <to>$updateOrderStatus_update_InputVariable.E2E1201_OrdersCollection/ns7:E2E1201_Orders/ns7:status</to>
-          </copy>
-        </assign>
-        <invoke name="updateOrderStatus" bpelx:invokeAsDetail="no" partnerLink="updateOrderStatus"
-                portType="ns6:updateOrderStatus_ptt" operation="update"
-                inputVariable="updateOrderStatus_update_InputVariable"/>
-      </sequence>
-    </scope>
+    <extensionActivity>
+      <bpelx:call name="updateOrderStatus" target="updateOrderStatusSP"/>
+    </extensionActivity>
   </sequence>
 </process>
