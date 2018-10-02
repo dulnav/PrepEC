@@ -166,5 +166,11 @@
     <extensionActivity>
       <bpelx:call name="updateOrderStatus" target="updateOrderStatusSP"/>
     </extensionActivity>
+    <if name="IfPaymentValid">
+      <documentation>
+        <![CDATA[Authorized]]>
+      </documentation>
+      <condition>$order/ns2:Status='Authorized’'</condition>
+    </if>
   </sequence>
 </process>
