@@ -171,12 +171,17 @@
         <![CDATA[Authorized]]>
       </documentation>
       <condition>$order/ns2:Status='Authorized’'</condition>
-      <assign name="assignReadyForShipStatus">
-        <copy>
-          <from>"ReadyForShip"</from>
-          <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$order/ns2:Status</to>
-        </copy>
-      </assign>
+      <sequence name="Sequence2">
+        <assign name="assignReadyForShipStatus">
+          <copy>
+            <from>"ReadyForShip"</from>
+            <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$order/ns2:Status</to>
+          </copy>
+        </assign>
+        <extensionActivity>
+          <bpelx:call name="updateOrderStatusToReadyForShip" target="updateOrderStatusSP"/>
+        </extensionActivity>
+      </sequence>
     </if>
   </sequence>
 </process>
