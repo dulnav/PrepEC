@@ -5,8 +5,8 @@
      xmlns:jca="http://xmlns.oracle.com/pcbpel/wsdl/jca/"
      xmlns:plt="http://schemas.xmlsoap.org/ws/2003/05/partner-link/"
      xmlns:pc="http://xmlns.oracle.com/pcbpel/"
-     xmlns:imp1="http://www.oracle.com/soasample"
      xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+     xmlns:imp1="http://www.oracle.com/soasample"
     >
   <plt:partnerLinkType name="Read_plt" >
     <plt:role name="Read_role" >
@@ -15,7 +15,7 @@
   </plt:partnerLinkType>
     <wsdl:types>
       <schema xmlns="http://www.w3.org/2001/XMLSchema" >
-        <import namespace="http://www.oracle.com/soasample" schemaLocation="../Schemas/nXSD_Order.xsd" />
+        <import namespace="http://www.oracle.com/soasample" schemaLocation="nxsd_schema1.xsd" />
       </schema>
     </wsdl:types>
     <wsdl:message name="Read_msg">

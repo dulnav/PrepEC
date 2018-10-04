@@ -1,6 +1,6 @@
 <adapter-config name="ProcessPS_File" adapter="file" wsdlLocation="ProcessPS_File.wsdl" xmlns="http://platform.integration.oracle/blocks/adapter/fw/metadata">
   
-  <connection-factory UIincludeWildcard="*.cvs" location="eis/FileAdapter"/>
+  <connection-factory UIincludeWildcard="*.csv" location="eis/FileAdapter"/>
   <endpoint-activation portType="Read_ptt" operation="Read">
     <activation-spec className="oracle.tip.adapter.file.inbound.FileActivationSpec">
       <property name="PhysicalDirectory" value="/tmp/soa/in"/>
@@ -9,7 +9,7 @@
       <property name="Recursive" value="true"/>
       <property name="PollingFrequency" value="60"/>
       <property name="DeleteFile" value="true"/>
-      <property name="IncludeFiles" value=".*\.cvs"/>
+      <property name="IncludeFiles" value=".*\.csv"/>
     </activation-spec>
   </endpoint-activation>
 

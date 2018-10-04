@@ -1,0 +1,8 @@
+1,1234123412341234,0316,AMEX
+Daniel,Day-Lewis,555 Beverly Lane,Hollywood,CA,12345,5127691108
+Daniel,Day-Lewis,555 Beverly Lane,Hollywood,CA,12345,5127691108
+Standard,ddl@gmail.com
+32779,5,4.72,Slaker,Water bottle,2008,Slaker Water Bottle
+30421,16,10.72,Grand Prix,Bicycle Tires,2005,Grand Prix Bicycle
+Tires
+32861,11,60.72,Safe-T,Bicycle helmet,1829,Safe-T Helmet
