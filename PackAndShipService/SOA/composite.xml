@@ -11,6 +11,14 @@
            xmlns:orawsp="http://schemas.oracle.com/ws/2006/01/policy"
            xmlns:ui="http://xmlns.oracle.com/soa/designer/"
            xmlns:sca-ext="http://xmlns.oracle.com/sca/1.0-ext">
+  <import namespace="http://xmlns.oracle.com/e2e-1201-composites2/PackAndShipService/packingService"
+          location="WSDLs/packingService.wsdl" importType="wsdl"/>
+  <service name="packingService" ui:wsdlLocation="WSDLs/packingService.wsdl">
+    <interface.wsdl interface="http://xmlns.oracle.com/e2e-1201-composites2/PackAndShipService/packingService#wsdl.interface(packingService_ptt)"/>
+    <binding.rest config="WADLs/packingService.wadl">
+      <property name="reorderJsonAsPerXmlSchema" type="xs:boolean" many="false" override="may">true</property>
+    </binding.rest>
+  </service>
   <property name="productVersion" type="xs:string" many="false">12.2.1.2.0.161003</property>
   <property name="compositeID" type="xs:string" many="false">a019ed0c-6959-4d75-b134-b996636a5ea0</property>
 </composite>

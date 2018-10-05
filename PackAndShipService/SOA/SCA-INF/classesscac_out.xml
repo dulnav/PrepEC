@@ -1,0 +1,13 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Faults>
+   <Fault>
+      <severity>error</severity>
+      <loc>/ns:composite/ns:service[@name='packingService']</loc>
+      <line>16</line>
+      <col>78</col>
+      <file>C:\JDeveloper\GIT\PAYMENT_v1\e2e-1201-composites2\PackAndShipService\SOA\composite.xml</file>
+      <name>C:\JDeveloper\GIT\PAYMENT_v1\e2e-1201-composites2\PackAndShipService\SOA\composite.xml</name>
+      <fix/>
+      <msg>El servicio "packingService" no existe como origen de transmisión</msg>
+   </Fault>
+</Faults>

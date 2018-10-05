@@ -1,0 +1,18 @@
+<Shipping xmlns="http://www.oracle.com/soasample">
+   <OrderNumber>string23</OrderNumber>
+   <Address>
+      <FirstName>string25</FirstName>
+      <LastName>string27</LastName>
+      <AddressLine>string29</AddressLine>
+      <City>string31</City>
+      <State>string33</State>
+      <ZipCode>string35</ZipCode>
+      <PhoneNumber>string38</PhoneNumber>
+   </Address>
+   <ShippingSpeed>Twoday</ShippingSpeed>
+   <ShippingProvider>
+      <Name>string41</Name>
+   </ShippingProvider>
+   <ShipMethod>43</ShipMethod>
+   <Status>Status44</Status>
+</Shipping>
