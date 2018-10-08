@@ -21,4 +21,17 @@
   </service>
   <property name="productVersion" type="xs:string" many="false">12.2.1.2.0.161003</property>
   <property name="compositeID" type="xs:string" many="false">a019ed0c-6959-4d75-b134-b996636a5ea0</property>
+  <component name="packAndShipOrder" version="2.0">
+    <implementation.bpel src="BPEL/packAndShipOrder.bpel"/>
+    <componentType>
+      <service name="packingService" ui:wsdlLocation="WSDLs/packingService.wsdl">
+        <interface.wsdl interface="http://xmlns.oracle.com/e2e-1201-composites2/PackAndShipService/packingService#wsdl.interface(packingService_ptt)"/>
+      </service>
+    </componentType>
+    <property name="bpel.config.oneWayDeliveryPolicy" type="xs:string" many="false">async.persist</property>
+  </component>
+  <wire>
+    <source.uri>packingService</source.uri>
+    <target.uri>packAndShipOrder/packingService</target.uri>
+  </wire>
 </composite>

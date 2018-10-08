@@ -1,0 +1,105 @@
+<?xml version = "1.0" encoding = "UTF-8" ?>
+<!--
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  Oracle JDeveloper BPEL Designer 
+  
+  Created: Mon Oct 08 11:14:04 CDT 2018
+  Author:  dbadmin
+  Type: BPEL 2.0 Process
+  Purpose: Asynchronous BPEL Process
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+-->
+<process name="packAndShipOrder"
+         targetNamespace="http://xmlns.oracle.com/e2e_1201_composites2/PackAndShipService/packAndShipOrder"
+         xmlns="http://docs.oasis-open.org/wsbpel/2.0/process/executable"
+         xmlns:client="http://xmlns.oracle.com/e2e_1201_composites2/PackAndShipService/packAndShipOrder"
+         xmlns:ora="http://schemas.oracle.com/xpath/extension"
+         xmlns:ui="http://xmlns.oracle.com/soa/designer"
+         xmlns:bpelx="http://schemas.oracle.com/bpel/extension"
+         xmlns:bpel="http://docs.oasis-open.org/wsbpel/2.0/process/executable"
+         xmlns:ns1="http://xmlns.oracle.com/e2e-1201-composites2/PackAndShipService/packingService"
+         xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:ns2="http://www.oracle.com/soasample"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns:oraext="http://www.oracle.com/XSL/Transform/java/oracle.tip.pc.services.functions.ExtFunc"
+         xmlns:bpm="http://xmlns.oracle.com/bpmn20/extensions"
+         xmlns:xp20="http://www.oracle.com/XSL/Transform/java/oracle.tip.pc.services.functions.Xpath20"
+         xmlns:ess="http://xmlns.oracle.com/scheduler" xmlns:hwf="http://xmlns.oracle.com/bpel/workflow/xpath"
+         xmlns:xref="http://www.oracle.com/XSL/Transform/java/oracle.tip.xref.xpath.XRefXPathFunctions"
+         xmlns:dvm="http://www.oracle.com/XSL/Transform/java/oracle.tip.dvm.LookupValue"
+         xmlns:bpws="http://schemas.xmlsoap.org/ws/2003/03/business-process/"
+         xmlns:xdk="http://schemas.oracle.com/bpel/extension/xpath/function/xdk"
+         xmlns:ids="http://xmlns.oracle.com/bpel/services/IdentityService/xpath"
+         xmlns:ldap="http://schemas.oracle.com/xpath/extension/ldap">
+    <!-- 
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        PARTNERLINKS                                                      
+        List of services participating in this BPEL process               
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    --> 
+    <partnerLinks>
+        <!-- 
+      The 'client' role represents the requester of this service. It is 
+      used for callback. The location and correlation information associated
+      with the client role are automatically set using WS-Addressing.
+    -->
+        <partnerLink name="packingService" partnerLinkType="ns1:packingService" myRole="packingServiceProvider"/>
+    </partnerLinks>
+
+    <!-- 
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        VARIABLES                                                        
+        List of messages and XML documents used within this BPEL process 
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    -->
+    <variables>
+        <!-- Reference to the message passed as input during initiation -->
+        <variable name="inputVariable" messageType="client:packAndShipOrderRequestMessage"/>
+
+        <!-- Reference to the message that will be sent back to the requester during callback -->
+        <variable name="outputVariable" messageType="client:packAndShipOrderResponseMessage"/>
+        <variable name="receiveShippingInfo_packAndShip_InputVariable" messageType="ns1:packAndShip_inputMessage"/>
+        <variable name="replyShipping_packAndShip_OutputVariable" messageType="ns1:packAndShip_outputMessage"/>
+        <variable name="orderNumber" type="xsd:string"/>
+        <variable name="orderStatus" type="xsd:string"/>
+    </variables>
+
+    <!-- 
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+       ORCHESTRATION LOGIC                                               
+       Set of activities coordinating the flow of messages across the    
+       services integrated within this business process                  
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    -->
+    <sequence name="main">
+        <!-- Receive input from requestor. (Note: This maps to operation defined in packAndShipOrder.wsdl) -->
+        <receive name="receiveShippingInfo" createInstance="yes" partnerLink="packingService"
+                 portType="ns1:packingService_ptt" operation="packAndShip"
+                 variable="receiveShippingInfo_packAndShip_InputVariable"/>
+        <empty name="ShippingService"/>
+        <assign name="setOrderStatusToShipped">
+            <copy bpelx:insertMissingToData="yes">
+                <from>"Shipped"</from>
+                <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$receiveShippingInfo_packAndShip_InputVariable.request/ns2:Status</to>
+            </copy>
+            <copy ignoreMissingFromData="yes">
+                <from>$receiveShippingInfo_packAndShip_InputVariable.request/ns2:OrderNumber</from>
+                <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$orderNumber</to>
+            </copy>
+            <copy>
+                <from>"Shipped"</from>
+                <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$orderStatus</to>
+            </copy>
+        </assign>
+        <assign name="assignShippingReply">
+            <copy>
+                <from>$receiveShippingInfo_packAndShip_InputVariable.request</from>
+                <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$replyShipping_packAndShip_OutputVariable.reply</to>
+            </copy>
+        </assign>
+        <reply name="replyShipping" partnerLink="packingService" variable="replyShipping_packAndShip_OutputVariable"
+               portType="ns1:packingService_ptt" operation="packAndShip"/>
+        <!-- 
+          Asynchronous callback to the requester. (Note: the callback location and correlation id is transparently handled using WS-addressing.)
+        -->
+    </sequence>
+</process>

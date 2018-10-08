@@ -1,13 +1,33 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
 <Faults>
    <Fault>
+      <severity>warning</severity>
+      <loc>/*[namespace-uri()='http://docs.oasis-open.org/wsbpel/2.0/process/executable'][local-name()='process']</loc>
+      <line>32</line>
+      <col/>
+      <file>BPEL/packAndShipOrder.bpel</file>
+      <name>BPEL/packAndShipOrder.bpel</name>
+      <fix>You should place all explicit &lt;bpel:import> statements in a BPEL 2.0 process.</fix>
+      <msg>There are no explicit "import" statements in &lt;bpel:process> "packAndShipOrder" as required by BPEL 2.0 standard.</msg>
+   </Fault>
+   <Fault>
       <severity>error</severity>
-      <loc>/ns:composite/ns:service[@name='packingService']</loc>
-      <line>16</line>
-      <col>78</col>
-      <file>C:\JDeveloper\GIT\PAYMENT_v1\e2e-1201-composites2\PackAndShipService\SOA\composite.xml</file>
-      <name>C:\JDeveloper\GIT\PAYMENT_v1\e2e-1201-composites2\PackAndShipService\SOA\composite.xml</name>
-      <fix/>
-      <msg>El servicio "packingService" no existe como origen de transmisión</msg>
+      <loc>/*[namespace-uri()='http://docs.oasis-open.org/wsbpel/2.0/process/executable'][local-name()='process']/*[namespace-uri()='http://docs.oasis-open.org/wsbpel/2.0/process/executable'][local-name()='variables']/*[namespace-uri()='http://docs.oasis-open.org/wsbpel/2.0/process/executable'][local-name()='variable'][@name='inputVariable']</loc>
+      <line>56</line>
+      <col/>
+      <file>BPEL/packAndShipOrder.bpel</file>
+      <name>BPEL/packAndShipOrder.bpel</name>
+      <fix>Make sure that value "client:packAndShipOrderRequestMessage" is resolvable (check imports, value of "messageType").</fix>
+      <msg>"messageType" is set to "client:packAndShipOrderRequestMessage" on this &lt;bpel:variable>  but it cannot be resolved (check value of "messageType", imports, WSDLs or XSDs).</msg>
+   </Fault>
+   <Fault>
+      <severity>error</severity>
+      <loc>/*[namespace-uri()='http://docs.oasis-open.org/wsbpel/2.0/process/executable'][local-name()='process']/*[namespace-uri()='http://docs.oasis-open.org/wsbpel/2.0/process/executable'][local-name()='variables']/*[namespace-uri()='http://docs.oasis-open.org/wsbpel/2.0/process/executable'][local-name()='variable'][@name='outputVariable']</loc>
+      <line>59</line>
+      <col/>
+      <file>BPEL/packAndShipOrder.bpel</file>
+      <name>BPEL/packAndShipOrder.bpel</name>
+      <fix>Make sure that value "client:packAndShipOrderResponseMessage" is resolvable (check imports, value of "messageType").</fix>
+      <msg>"messageType" is set to "client:packAndShipOrderResponseMessage" on this &lt;bpel:variable>  but it cannot be resolved (check value of "messageType", imports, WSDLs or XSDs).</msg>
    </Fault>
 </Faults>
