@@ -35,7 +35,10 @@
         PARTNERLINKS                                                      
         List of services participating in this BPEL process               
       ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    --> 
+    -->
+    <import namespace="http://xmlns.oracle.com/e2e-1201-composites2/PackAndShipService/packingService"
+            location="../WSDLs/packingService.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"
+            ui:processWSDL="true"/>
     <partnerLinks>
         <!-- 
       The 'client' role represents the requester of this service. It is 
@@ -53,10 +56,8 @@
     -->
     <variables>
         <!-- Reference to the message passed as input during initiation -->
-        <variable name="inputVariable" messageType="client:packAndShipOrderRequestMessage"/>
 
         <!-- Reference to the message that will be sent back to the requester during callback -->
-        <variable name="outputVariable" messageType="client:packAndShipOrderResponseMessage"/>
         <variable name="receiveShippingInfo_packAndShip_InputVariable" messageType="ns1:packAndShip_inputMessage"/>
         <variable name="replyShipping_packAndShip_OutputVariable" messageType="ns1:packAndShip_outputMessage"/>
         <variable name="orderNumber" type="xsd:string"/>
@@ -90,6 +91,14 @@
                 <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$orderStatus</to>
             </copy>
         </assign>
+        <extensionActivity>
+            <bpelx:call name="updateOrderStatusToShipped"
+                        xmlns:sp1="http://xmlns.oracle.com/e2e_1201_composites/UpdateOrderStatusTemplate/updateOrderStatusSP"
+                        target="sp1:updateOrderStatusSP">
+                <bpelx:param name="orderNumber" copyByValue="yes" variable="orderNumber"/>
+                <bpelx:param name="orderStatus" copyByValue="yes" variable="orderStatus"/>
+            </bpelx:call>
+        </extensionActivity>
         <assign name="assignShippingReply">
             <copy>
                 <from>$receiveShippingInfo_packAndShip_InputVariable.request</from>

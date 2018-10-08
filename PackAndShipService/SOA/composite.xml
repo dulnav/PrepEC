@@ -13,6 +13,8 @@
            xmlns:sca-ext="http://xmlns.oracle.com/sca/1.0-ext">
   <import namespace="http://xmlns.oracle.com/e2e-1201-composites2/PackAndShipService/packingService"
           location="WSDLs/packingService.wsdl" importType="wsdl"/>
+  <import namespace="http://xmlns.oracle.com/pcbpel/adapter/db/e2e-1201-composites/UpdateOrderStatusTemplate/updateOrderStatusInDB"
+          location="WSDLs/updateOrderStatusInDB.wsdl" importType="wsdl"/>
   <service name="packingService" ui:wsdlLocation="WSDLs/packingService.wsdl">
     <interface.wsdl interface="http://xmlns.oracle.com/e2e-1201-composites2/PackAndShipService/packingService#wsdl.interface(packingService_ptt)"/>
     <binding.rest config="WADLs/packingService.wadl">
@@ -27,11 +29,37 @@
       <service name="packingService" ui:wsdlLocation="WSDLs/packingService.wsdl">
         <interface.wsdl interface="http://xmlns.oracle.com/e2e-1201-composites2/PackAndShipService/packingService#wsdl.interface(packingService_ptt)"/>
       </service>
+      <sca-ext:callReference name="updateOrderStatusSP"/>
     </componentType>
     <property name="bpel.config.oneWayDeliveryPolicy" type="xs:string" many="false">async.persist</property>
   </component>
+  <component name="updateOrderStatusSP">
+    <implementation.sbpel src="BPEL/updateOrderStatusSP.sbpel"/>
+    <componentType>
+      <reference name="updateOrderStatusInDB" ui:wsdlLocation="WSDLs/updateOrderStatusInDB.wsdl">
+        <interface.wsdl interface="http://xmlns.oracle.com/pcbpel/adapter/db/e2e-1201-composites/UpdateOrderStatusTemplate/updateOrderStatusInDB#wsdl.interface(updateOrderStatusInDB_ptt)"/>
+      </reference>
+      <sca-ext:callService name="updateOrderStatusSP"/>
+    </componentType>
+  </component>
+  <reference name="updateOrderStatusInDB" ui:wsdlLocation="WSDLs/updateOrderStatusInDB.wsdl">
+    <interface.wsdl interface="http://xmlns.oracle.com/pcbpel/adapter/db/e2e-1201-composites/UpdateOrderStatusTemplate/updateOrderStatusInDB#wsdl.interface(updateOrderStatusInDB_ptt)"/>
+    <binding.jca config="Adapters/updateOrderStatusInDB_db.jca"/>
+    <property name="jca.retry.count" type="xs:int" many="false" override="may">4</property>
+    <property name="jca.retry.interval" type="xs:int" many="false" override="may">1</property>
+    <property name="jca.retry.backoff" type="xs:int" many="false" override="may">2</property>
+    <property name="jca.retry.maxInterval" type="xs:string" many="false" override="may">120</property>
+  </reference>
   <wire>
     <source.uri>packingService</source.uri>
     <target.uri>packAndShipOrder/packingService</target.uri>
   </wire>
+  <wire>
+    <source.uri>updateOrderStatusSP/updateOrderStatusInDB</source.uri>
+    <target.uri>updateOrderStatusInDB</target.uri>
+  </wire>
+  <sca-ext:callWire>
+    <sca-ext:source>packAndShipOrder/updateOrderStatusSP</sca-ext:source>
+    <sca-ext:target>updateOrderStatusSP/updateOrderStatusSP</sca-ext:target>
+  </sca-ext:callWire>
 </composite>
