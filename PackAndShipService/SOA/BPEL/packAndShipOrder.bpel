@@ -29,7 +29,9 @@
          xmlns:bpws="http://schemas.xmlsoap.org/ws/2003/03/business-process/"
          xmlns:xdk="http://schemas.oracle.com/bpel/extension/xpath/function/xdk"
          xmlns:ids="http://xmlns.oracle.com/bpel/services/IdentityService/xpath"
-         xmlns:ldap="http://schemas.oracle.com/xpath/extension/ldap">
+         xmlns:ldap="http://schemas.oracle.com/xpath/extension/ldap"
+         xmlns:ns3="http://xmlns.oracle.com/pcbpel/adapter/ums/e2e-1201-composites2/PackAndShipService/NotifyUser"
+         xmlns:ns4="http://platform.integration.oracle/blocks/adapter/fw/metadata/NotifyUser">
     <!-- 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         PARTNERLINKS                                                      
@@ -46,6 +48,7 @@
       with the client role are automatically set using WS-Addressing.
     -->
         <partnerLink name="packingService" partnerLinkType="ns1:packingService" myRole="packingServiceProvider"/>
+        <partnerLink name="NotifyUser" partnerLinkType="ns3:SendNotification_plt" partnerRole="SendNotification_role"/>
     </partnerLinks>
 
     <!-- 
@@ -62,6 +65,7 @@
         <variable name="replyShipping_packAndShip_OutputVariable" messageType="ns1:packAndShip_outputMessage"/>
         <variable name="orderNumber" type="xsd:string"/>
         <variable name="orderStatus" type="xsd:string"/>
+        <variable name="notifyUserByEmail_SendNotification_InputVariable" messageType="ns3:SendNotification_msg"/>
     </variables>
 
     <!-- 
@@ -105,6 +109,14 @@
                 <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$replyShipping_packAndShip_OutputVariable.reply</to>
             </copy>
         </assign>
+        <assign name="assignNotification">
+            <copy>
+                <from>concat("Your order#", $orderNumber, "has been shipped via " , $replyShipping_packAndShip_OutputVariable.reply/ns2:ShippingProvider/ns2:Name)</from>
+                <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$notifyUserByEmail_SendNotification_InputVariable.body/ns4:payload</to>
+            </copy>
+        </assign>
+        <invoke name="notifyUserByEmail" portType="ns3:SendNotification_ptt" partnerLink="NotifyUser"
+                operation="SendNotification" inputVariable="notifyUserByEmail_SendNotification_InputVariable"/>
         <reply name="replyShipping" partnerLink="packingService" variable="replyShipping_packAndShip_OutputVariable"
                portType="ns1:packingService_ptt" operation="packAndShip"/>
         <!-- 

@@ -15,6 +15,8 @@
           location="WSDLs/packingService.wsdl" importType="wsdl"/>
   <import namespace="http://xmlns.oracle.com/pcbpel/adapter/db/e2e-1201-composites/UpdateOrderStatusTemplate/updateOrderStatusInDB"
           location="WSDLs/updateOrderStatusInDB.wsdl" importType="wsdl"/>
+  <import namespace="http://xmlns.oracle.com/pcbpel/adapter/ums/e2e-1201-composites2/PackAndShipService/NotifyUser"
+          location="WSDLs/NotifyUser.wsdl" importType="wsdl"/>
   <service name="packingService" ui:wsdlLocation="WSDLs/packingService.wsdl">
     <interface.wsdl interface="http://xmlns.oracle.com/e2e-1201-composites2/PackAndShipService/packingService#wsdl.interface(packingService_ptt)"/>
     <binding.rest config="WADLs/packingService.wadl">
@@ -29,6 +31,9 @@
       <service name="packingService" ui:wsdlLocation="WSDLs/packingService.wsdl">
         <interface.wsdl interface="http://xmlns.oracle.com/e2e-1201-composites2/PackAndShipService/packingService#wsdl.interface(packingService_ptt)"/>
       </service>
+      <reference name="NotifyUser" ui:wsdlLocation="WSDLs/NotifyUser.wsdl">
+        <interface.wsdl interface="http://xmlns.oracle.com/pcbpel/adapter/ums/e2e-1201-composites2/PackAndShipService/NotifyUser#wsdl.interface(SendNotification_ptt)"/>
+      </reference>
       <sca-ext:callReference name="updateOrderStatusSP"/>
     </componentType>
     <property name="bpel.config.oneWayDeliveryPolicy" type="xs:string" many="false">async.persist</property>
@@ -50,6 +55,10 @@
     <property name="jca.retry.backoff" type="xs:int" many="false" override="may">2</property>
     <property name="jca.retry.maxInterval" type="xs:string" many="false" override="may">120</property>
   </reference>
+  <reference name="NotifyUser" ui:wsdlLocation="WSDLs/NotifyUser.wsdl">
+    <interface.wsdl interface="http://xmlns.oracle.com/pcbpel/adapter/ums/e2e-1201-composites2/PackAndShipService/NotifyUser#wsdl.interface(SendNotification_ptt)"/>
+    <binding.jca config="Adapters/NotifyUser_ums.jca"/>
+  </reference>
   <wire>
     <source.uri>packingService</source.uri>
     <target.uri>packAndShipOrder/packingService</target.uri>
@@ -57,6 +66,10 @@
   <wire>
     <source.uri>updateOrderStatusSP/updateOrderStatusInDB</source.uri>
     <target.uri>updateOrderStatusInDB</target.uri>
+  </wire>
+  <wire>
+    <source.uri>packAndShipOrder/NotifyUser</source.uri>
+    <target.uri>NotifyUser</target.uri>
   </wire>
   <sca-ext:callWire>
     <sca-ext:source>packAndShipOrder/updateOrderStatusSP</sca-ext:source>
