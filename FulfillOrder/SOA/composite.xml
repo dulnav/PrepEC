@@ -19,6 +19,8 @@
           location="WSDLs/fulfillOrder.wsdl" importType="wsdl"/>
   <import namespace="http://xmlns.oracle.com/pcbpel/adapter/db/e2e-1201-composites/FulfillOrder/getShippingProvider"
           location="WSDLs/getShippingProvider.wsdl" importType="wsdl"/>
+  <import namespace="http://xmlns.oracle.com/DetermineShippingRules/DetermineShippingRules_DecisionService_1"
+          location="WSDLs/DetermineShippingRules_DecisionService_1.wsdl" importType="wsdl"/>
   <service name="ReceiveOrdersReadyForShipment" ui:wsdlLocation="WSDLs/ReceiveOrdersReadyForShipment.wsdl">
     <interface.wsdl interface="http://xmlns.oracle.com/pcbpel/adapter/db/e2e-1201-composites-templates/FulfillOrder/ReceiveOrdersReadyForShipment#wsdl.interface(ReceiveOrdersReadyForShipment_ptt)"/>
     <binding.jca config="Adapters/ReceiveOrdersReadyForShipment_db.jca">
@@ -56,6 +58,15 @@
     </componentType>
     <property name="bpel.config.transaction" type="xs:string" many="false">required</property>
     <property name="bpel.config.oneWayDeliveryPolicy" type="xs:string" many="false">async.persist</property>
+  </component>
+  <component name="DetermineShippingRules">
+    <implementation.decision src="DetermineShippingRules.decs"/>
+    <componentType>
+      <service name="DetermineShippingRules_DecisionService_1"
+               ui:wsdlLocation="WSDLs/DetermineShippingRules_DecisionService_1.wsdl">
+        <interface.wsdl interface="http://xmlns.oracle.com/DetermineShippingRules/DetermineShippingRules_DecisionService_1#wsdl.interface(IDecisionService)"/>
+      </service>
+    </componentType>
   </component>
   <reference name="getShippingProvider" ui:wsdlLocation="WSDLs/getShippingProvider.wsdl">
     <interface.wsdl interface="http://xmlns.oracle.com/pcbpel/adapter/db/e2e-1201-composites/FulfillOrder/getShippingProvider#wsdl.interface(getShippingProvider_ptt)"/>

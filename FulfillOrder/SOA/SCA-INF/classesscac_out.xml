@@ -1,0 +1,23 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Faults>
+   <Fault>
+      <severity>warning</severity>
+      <loc>/ns:composite/ns:component[@name='DetermineShippingRules/DetermineShippingRules_DecisionService_1']</loc>
+      <line/>
+      <col/>
+      <file>C:\JDeveloper\GIT\PAYMENT_v1\e2e-1201-composites2\FulfillOrder\SOA\composite.xml</file>
+      <name>C:\JDeveloper\GIT\PAYMENT_v1\e2e-1201-composites2\FulfillOrder\SOA\composite.xml</name>
+      <fix/>
+      <msg>El servicio "DetermineShippingRules_DecisionService_1" expuesto por el componente "DetermineShippingRules" no se ha transmitido o lo está utilizando otro componente.</msg>
+   </Fault>
+   <Fault>
+      <severity>warning</severity>
+      <loc>/*[namespace-uri()='http://docs.oasis-open.org/wsbpel/2.0/process/executable'][local-name()='process']/*[namespace-uri()='http://docs.oasis-open.org/wsbpel/2.0/process/executable'][local-name()='sequence'][@name='main']/*[namespace-uri()='http://docs.oasis-open.org/wsbpel/2.0/process/executable'][local-name()='assign'][@name='assignShippingProvider']/*[namespace-uri()='http://docs.oasis-open.org/wsbpel/2.0/process/executable'][local-name()='copy']/*[namespace-uri()='http://docs.oasis-open.org/wsbpel/2.0/process/executable'][local-name()='from']</loc>
+      <line>83</line>
+      <col/>
+      <file>BPEL/fulfillOrder.bpel</file>
+      <name>BPEL/fulfillOrder.bpel</name>
+      <fix>Add a predicate to select an element from the sequence.</fix>
+      <msg>The XPath segment "child::ns2:E2E1201_ShippingMethods" selects a sequence of elements - a predicate MAY be needed to correctly select an element.</msg>
+   </Fault>
+</Faults>
