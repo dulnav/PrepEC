@@ -19,7 +19,9 @@
          xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:bpelx="http://schemas.oracle.com/bpel/extension"
          xmlns:ns2="http://xmlns.oracle.com/pcbpel/adapter/db/top/getShippingProvider"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ns3="http://www.oracle.com/soasample"
-         xmlns:ns1="http://xmlns.oracle.com/pcbpel/adapter/db/e2e-1201-composites/FulfillOrder/getShippingProvider">
+         xmlns:ns1="http://xmlns.oracle.com/pcbpel/adapter/db/e2e-1201-composites/FulfillOrder/getShippingProvider"
+         xmlns:ns4="http://xmlns.oracle.com/DetermineShippingRules/DetermineShippingRules_DecisionService_1"
+         xmlns:ns5="http://xmlns.oracle.com/bpel">
 
   <import ui:processWSDL="true" namespace="http://xmlns.oracle.com/e2e_1201_composites_templates/FulfillOrder/fulfillOrder" location="../WSDLs/fulfillOrder.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
   <!-- 
@@ -37,6 +39,8 @@
     <partnerLink name="fulfillorder_client" partnerLinkType="client:fulfillOrder" myRole="fulfillOrderProvider"/>
     <partnerLink name="getShippingProvider" partnerLinkType="ns1:getShippingProvider_plt"
                  partnerRole="getShippingProvider_role"/>
+    <partnerLink name="DetermineShippingRules.DetermineShippingRules_DecisionService_1"
+                 partnerRole="IDecisionService_Role" partnerLinkType="ns4:IDecisionService_PLT"/>
   </partnerLinks>
 
   <!-- 
@@ -68,6 +72,38 @@
 
     <!-- Receive input from requestor. (Note: This maps to operation defined in fulfillOrder.wsdl) -->
     <receive name="receiveInput" partnerLink="fulfillorder_client" portType="client:fulfillOrder" operation="process" variable="inputVariable" createInstance="yes"/>
+    <scope name="determineShippingMethod">
+      <bpelx:annotation>
+        <bpelx:pattern patternName="bpelx:decide"></bpelx:pattern>
+      </bpelx:annotation>
+      <variables>
+        <variable name="dsIn" messageType="ns4:callFunctionStatelessMessage"/>
+        <variable name="dsOut" messageType="ns4:callFunctionStatelessDecisionMessage"/>
+      </variables>
+      <sequence name="Sequence1">
+        <assign name="Facts_To_Rule_Service">
+          <copy>
+            <from variable="inputVariable" part="payload"><query>ns3:Shipping</query></from>
+            <to variable="dsIn" part="payload"><query>ns4:parameterList</query></to>
+          </copy>
+        </assign>
+        <assign name="BPEL_Header">
+          <copy>
+            <from>"DetermineShippingRules_DecisionService_1"</from>
+            <to variable="dsIn" part="payload"><query>@name</query></to>
+          </copy>
+        </assign>
+        <invoke name="Invoke" partnerLink="DetermineShippingRules.DetermineShippingRules_DecisionService_1"
+                portType="ns4:IDecisionService" operation="callFunctionStateless" inputVariable="dsIn"
+                outputVariable="dsOut"/>
+        <assign name="Rule_Service_To_Facts">
+          <copy>
+            <from variable="dsOut" part="payload"><query>ns4:resultList/ns3:Shipping/ns3:ShipMethod</query></from>
+            <to variable="shippingMethodID"/>
+          </copy>
+        </assign>
+      </sequence>
+    </scope>
     <assign name="assignShippingMethodForDBAdapter">
       <copy>
         <from>$shippingMethodID</from>

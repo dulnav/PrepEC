@@ -55,6 +55,10 @@
       <reference name="getShippingProvider" ui:wsdlLocation="WSDLs/getShippingProvider.wsdl">
         <interface.wsdl interface="http://xmlns.oracle.com/pcbpel/adapter/db/e2e-1201-composites/FulfillOrder/getShippingProvider#wsdl.interface(getShippingProvider_ptt)"/>
       </reference>
+      <reference name="DetermineShippingRules.DetermineShippingRules_DecisionService_1"
+                 ui:wsdlLocation="WSDLs/DetermineShippingRules_DecisionService_1.wsdl">
+        <interface.wsdl interface="http://xmlns.oracle.com/DetermineShippingRules/DetermineShippingRules_DecisionService_1#wsdl.interface(IDecisionService)"/>
+      </reference>
     </componentType>
     <property name="bpel.config.transaction" type="xs:string" many="false">required</property>
     <property name="bpel.config.oneWayDeliveryPolicy" type="xs:string" many="false">async.persist</property>
@@ -87,5 +91,9 @@
   <wire>
     <source.uri>fulfillOrder/getShippingProvider</source.uri>
     <target.uri>getShippingProvider</target.uri>
+  </wire>
+  <wire>
+    <source.uri>fulfillOrder/DetermineShippingRules.DetermineShippingRules_DecisionService_1</source.uri>
+    <target.uri>DetermineShippingRules/DetermineShippingRules_DecisionService_1</target.uri>
   </wire>
 </composite>
