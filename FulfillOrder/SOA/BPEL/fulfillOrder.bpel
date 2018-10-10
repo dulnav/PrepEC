@@ -1,0 +1,88 @@
+<?xml version = "1.0" encoding = "UTF-8" ?>
+<!--
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  Oracle JDeveloper BPEL Designer 
+  
+  Created: Tue Apr 16 08:29:40 PDT 2013
+  Author:  sgeib
+  Type: BPEL 2.0 Process
+  Purpose: One Way BPEL Process
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+-->
+<process name="fulfillOrder"
+               targetNamespace="http://xmlns.oracle.com/e2e_1201_composites_templates/FulfillOrder/fulfillOrder"
+               xmlns="http://docs.oasis-open.org/wsbpel/2.0/process/executable"
+               xmlns:client="http://xmlns.oracle.com/e2e_1201_composites_templates/FulfillOrder/fulfillOrder"
+               xmlns:ora="http://schemas.oracle.com/xpath/extension"
+               xmlns:ui="http://xmlns.oracle.com/soa/designer"
+               xmlns:bpel="http://docs.oasis-open.org/wsbpel/2.0/process/executable"         
+         xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:bpelx="http://schemas.oracle.com/bpel/extension"
+         xmlns:ns2="http://xmlns.oracle.com/pcbpel/adapter/db/top/getShippingProvider"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ns3="http://www.oracle.com/soasample"
+         xmlns:ns1="http://xmlns.oracle.com/pcbpel/adapter/db/e2e-1201-composites/FulfillOrder/getShippingProvider">
+
+  <import ui:processWSDL="true" namespace="http://xmlns.oracle.com/e2e_1201_composites_templates/FulfillOrder/fulfillOrder" location="../WSDLs/fulfillOrder.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
+  <!-- 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      PARTNERLINKS                                                      
+      List of services participating in this BPEL process               
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  --> 
+  <partnerLinks>
+    <!-- 
+      The 'client' role represents the requester of this service. It is 
+      used for callback. The location and correlation information associated
+      with the client role are automatically set using WS-Addressing.
+    -->
+    <partnerLink name="fulfillorder_client" partnerLinkType="client:fulfillOrder" myRole="fulfillOrderProvider"/>
+    <partnerLink name="getShippingProvider" partnerLinkType="ns1:getShippingProvider_plt"
+                 partnerRole="getShippingProvider_role"/>
+  </partnerLinks>
+
+  <!-- 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      VARIABLES                                                        
+      List of messages and XML documents used within this BPEL process 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+  <variables>
+    <!-- Reference to the message passed as input during initiation -->
+    <variable name="inputVariable" messageType="client:fulfillOrderRequestMessage"/>
+    <variable name="shippingMethodID" type="xsd:integer">
+      <from>2</from>
+    </variable>
+    <variable name="getShippingProvider_getShippingProviderSelect_InputVariable"
+              messageType="ns1:getShippingProviderSelect_inputParameters"/>
+    <variable name="getShippingProvider_getShippingProviderSelect_OutputVariable"
+              messageType="ns1:E2E1201_ShippingMethodsCollection_msg"/>
+  </variables>
+
+  <!-- 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+     ORCHESTRATION LOGIC                                               
+     Set of activities coordinating the flow of messages across the    
+     services integrated within this business process                  
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+  <sequence name="main">
+
+    <!-- Receive input from requestor. (Note: This maps to operation defined in fulfillOrder.wsdl) -->
+    <receive name="receiveInput" partnerLink="fulfillorder_client" portType="client:fulfillOrder" operation="process" variable="inputVariable" createInstance="yes"/>
+    <assign name="assignShippingMethodForDBAdapter">
+      <copy>
+        <from>$shippingMethodID</from>
+        <to>$getShippingProvider_getShippingProviderSelect_InputVariable.getShippingProviderSelect_inputParameters/ns2:smi</to>
+      </copy>
+    </assign>
+    <invoke name="getShippingProvider" partnerLink="getShippingProvider"
+            portType="ns1:getShippingProvider_ptt" operation="getShippingProviderSelect"
+            inputVariable="getShippingProvider_getShippingProviderSelect_InputVariable"
+            outputVariable="getShippingProvider_getShippingProviderSelect_OutputVariable" bpelx:invokeAsDetail="no"/>
+    <assign name="assignShippingProvider">
+      <copy bpelx:insertMissingToData="yes">
+        <from>$getShippingProvider_getShippingProviderSelect_OutputVariable.E2E1201_ShippingMethodsCollection/ns2:E2E1201_ShippingMethods/ns2:providerId/ns2:name</from>
+        <to>$inputVariable.payload/ns3:Shipping/ns3:ShippingProvider/ns3:Name</to>
+      </copy>
+    </assign>
+  </sequence>
+</process>
