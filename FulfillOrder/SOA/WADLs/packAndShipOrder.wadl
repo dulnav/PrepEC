@@ -1,0 +1,23 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<application xmlns:soa="http://www.oracle.com/soa/rest" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://wadl.dev.java.net/2009/02">
+   <doc title="packAndShipOrder">The order is packed and shipped</doc>
+   <grammars>
+      <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+            <xsd:import namespace="http://www.oracle.com/soasample" schemaLocation="../Schemas/CanonicalOrder.xsd"/>
+        </xsd:schema>
+   </grammars>
+   <resources>
+      <resource path="/shipping/">
+         <method name="POST" soa:wsdlOperation="packAndShip">
+            <doc title="POST packAndShip">operacion post</doc>
+            <request>
+               <representation mediaType="application/xml" element="cns:Shipping" xmlns:cns="http://www.oracle.com/soasample"/>
+               <representation mediaType="application/json" element="cns:Shipping" xmlns:cns="http://www.oracle.com/soasample"/>
+            </request>
+            <response status="200">
+               <representation mediaType="application/xml" element="cns:Shipping" xmlns:cns="http://www.oracle.com/soasample"/>
+            </response>
+         </method>
+      </resource>
+   </resources>
+</application>

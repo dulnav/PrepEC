@@ -83,6 +83,9 @@
          <string v="Java"/>
          <string v="SOA"/>
          <string v="TopLink"/>
+         <string v="WSDL"/>
+         <string v="WSPolicy"/>
+         <string v="XML"/>
       </list>
    </hash>
    <hash n="oracle.jdeveloper.compiler.OjcConfiguration">

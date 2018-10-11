@@ -1,15 +1,7 @@
 <?xml version= '1.0' encoding= 'UTF-8' ?>
-<xs:schema targetNamespace="http://www.oracle.com/soasample" elementFormDefault="qualified" attributeFormDefault="unqualified"
-     xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.oracle.com/soasample">
-<!--
-	  e2e-1201-orderprocessing data types 
-	  
-	  Last update:  4/18 version 1.2
-	
-	
--->
-    <xs:element name="Order"
-         type="OrderType">
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.oracle.com/soasample" targetNamespace="http://www.oracle.com/soasample"
+     elementFormDefault="qualified" attributeFormDefault="unqualified">
+    <xs:element name="Order" type="OrderType">
         <xs:annotation>
             <xs:documentation>The canonical order element</xs:documentation>
         </xs:annotation>
@@ -271,8 +263,7 @@
     </xs:complexType>
     <xs:complexType name="PaymentStatusType">
         <xs:sequence>
-            <xs:element name="Status" type="xs:string">
-            </xs:element>
+            <xs:element name="Status" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>
     <xs:complexType name="InventoryQueryType">

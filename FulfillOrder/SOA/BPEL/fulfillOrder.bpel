@@ -21,7 +21,8 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ns3="http://www.oracle.com/soasample"
          xmlns:ns1="http://xmlns.oracle.com/pcbpel/adapter/db/e2e-1201-composites/FulfillOrder/getShippingProvider"
          xmlns:ns4="http://xmlns.oracle.com/DetermineShippingRules/DetermineShippingRules_DecisionService_1"
-         xmlns:ns5="http://xmlns.oracle.com/bpel">
+         xmlns:ns5="http://xmlns.oracle.com/bpel"
+         xmlns:ns6="http://xmlns.oracle.com/e2e-1201-composites2/FulfillOrder/packAndShipOrder">
 
   <import ui:processWSDL="true" namespace="http://xmlns.oracle.com/e2e_1201_composites_templates/FulfillOrder/fulfillOrder" location="../WSDLs/fulfillOrder.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
   <!-- 
@@ -41,6 +42,7 @@
                  partnerRole="getShippingProvider_role"/>
     <partnerLink name="DetermineShippingRules.DetermineShippingRules_DecisionService_1"
                  partnerRole="IDecisionService_Role" partnerLinkType="ns4:IDecisionService_PLT"/>
+    <partnerLink name="packAndShipOrder" partnerLinkType="ns6:packAndShipOrder" partnerRole="packAndShipOrderProvider"/>
   </partnerLinks>
 
   <!-- 
@@ -59,6 +61,8 @@
               messageType="ns1:getShippingProviderSelect_inputParameters"/>
     <variable name="getShippingProvider_getShippingProviderSelect_OutputVariable"
               messageType="ns1:E2E1201_ShippingMethodsCollection_msg"/>
+    <variable name="invokePackAndShipOrder_packAndShip_InputVariable" messageType="ns6:packAndShip_inputMessage"/>
+    <variable name="invokePackAndShipOrder_packAndShip_OutputVariable" messageType="ns6:packAndShip_outputMessage"/>
   </variables>
 
   <!-- 
@@ -120,5 +124,18 @@
         <to>$inputVariable.payload/ns3:Shipping/ns3:ShippingProvider/ns3:Name</to>
       </copy>
     </assign>
+    <assign name="assignShipping">
+      <copy>
+        <from>$inputVariable.payload/ns3:Shipping</from>
+        <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$invokePackAndShipOrder_packAndShip_InputVariable.request</to>
+      </copy>
+      <copy>
+        <from>$inputVariable.payload/ns3:OrderNumber</from>
+        <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$invokePackAndShipOrder_packAndShip_InputVariable.request/ns3:OrderNumber</to>
+      </copy>
+    </assign>
+    <invoke name="invokePackAndShipOrder" portType="ns6:packAndShipOrder_ptt" partnerLink="packAndShipOrder"
+            operation="packAndShip" inputVariable="invokePackAndShipOrder_packAndShip_InputVariable"
+            outputVariable="invokePackAndShipOrder_packAndShip_OutputVariable"/>
   </sequence>
 </process>
