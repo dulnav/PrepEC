@@ -22,7 +22,19 @@
          xmlns:ns1="http://xmlns.oracle.com/pcbpel/adapter/db/e2e-1201-composites/FulfillOrder/getShippingProvider"
          xmlns:ns4="http://xmlns.oracle.com/DetermineShippingRules/DetermineShippingRules_DecisionService_1"
          xmlns:ns5="http://xmlns.oracle.com/bpel"
-         xmlns:ns6="http://xmlns.oracle.com/e2e-1201-composites2/FulfillOrder/packAndShipOrder">
+         xmlns:ns6="http://xmlns.oracle.com/e2e-1201-composites2/FulfillOrder/packAndShipOrder"
+         xmlns:ns7="http://xmlns.oracle.com/pcbpel/adapter/coherence/e2e-1201-composites2/FulfillOrder/queryCoherence"
+         xmlns:oraext="http://www.oracle.com/XSL/Transform/java/oracle.tip.pc.services.functions.ExtFunc"
+         xmlns:bpws="http://schemas.xmlsoap.org/ws/2003/03/business-process/"
+         xmlns:xdk="http://schemas.oracle.com/bpel/extension/xpath/function/xdk"
+         xmlns:ids="http://xmlns.oracle.com/bpel/services/IdentityService/xpath"
+         xmlns:bpm="http://xmlns.oracle.com/bpmn20/extensions"
+         xmlns:xp20="http://www.oracle.com/XSL/Transform/java/oracle.tip.pc.services.functions.Xpath20"
+         xmlns:ess="http://xmlns.oracle.com/scheduler" xmlns:hwf="http://xmlns.oracle.com/bpel/workflow/xpath"
+         xmlns:xref="http://www.oracle.com/XSL/Transform/java/oracle.tip.xref.xpath.XRefXPathFunctions"
+         xmlns:dvm="http://www.oracle.com/XSL/Transform/java/oracle.tip.dvm.LookupValue"
+         xmlns:ldap="http://schemas.oracle.com/xpath/extension/ldap"
+         xmlns:ns8="http://xmlns.oracle.com/pcbpel/adapter/coherence/e2e-1201-composites2/FulfillOrder/putIntoCoherence">
 
   <import ui:processWSDL="true" namespace="http://xmlns.oracle.com/e2e_1201_composites_templates/FulfillOrder/fulfillOrder" location="../WSDLs/fulfillOrder.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
   <!-- 
@@ -43,6 +55,8 @@
     <partnerLink name="DetermineShippingRules.DetermineShippingRules_DecisionService_1"
                  partnerRole="IDecisionService_Role" partnerLinkType="ns4:IDecisionService_PLT"/>
     <partnerLink name="packAndShipOrder" partnerLinkType="ns6:packAndShipOrder" partnerRole="packAndShipOrderProvider"/>
+    <partnerLink name="queryCoherence" partnerLinkType="ns7:Get_plt" partnerRole="Get_role"/>
+    <partnerLink name="putIntoCoherence" partnerLinkType="ns8:Put_plt" partnerRole="Put_role"/>
   </partnerLinks>
 
   <!-- 
@@ -63,6 +77,10 @@
               messageType="ns1:E2E1201_ShippingMethodsCollection_msg"/>
     <variable name="invokePackAndShipOrder_packAndShip_InputVariable" messageType="ns6:packAndShip_inputMessage"/>
     <variable name="invokePackAndShipOrder_packAndShip_OutputVariable" messageType="ns6:packAndShip_outputMessage"/>
+    <variable name="queryCoherence_Get_InputVariable" messageType="ns7:Get_msg"/>
+    <variable name="queryCoherence_Get_OutputVariable" messageType="ns7:GetResponse_msg"/>
+    <variable name="putIntoCoherence_Put_InputVariable" messageType="ns8:Put_msg"/>
+    <variable name="putIntoCoherence_Put_OutputVariable" messageType="ns8:PutResponse_msg"/>
   </variables>
 
   <!-- 
@@ -108,22 +126,61 @@
         </assign>
       </sequence>
     </scope>
-    <assign name="assignShippingMethodForDBAdapter">
-      <copy>
-        <from>$shippingMethodID</from>
-        <to>$getShippingProvider_getShippingProviderSelect_InputVariable.getShippingProviderSelect_inputParameters/ns2:smi</to>
-      </copy>
-    </assign>
-    <invoke name="getShippingProvider" partnerLink="getShippingProvider"
-            portType="ns1:getShippingProvider_ptt" operation="getShippingProviderSelect"
-            inputVariable="getShippingProvider_getShippingProviderSelect_InputVariable"
-            outputVariable="getShippingProvider_getShippingProviderSelect_OutputVariable" bpelx:invokeAsDetail="no"/>
-    <assign name="assignShippingProvider">
-      <copy bpelx:insertMissingToData="yes">
-        <from>$getShippingProvider_getShippingProviderSelect_OutputVariable.E2E1201_ShippingMethodsCollection/ns2:E2E1201_ShippingMethods/ns2:providerId/ns2:name</from>
-        <to>$inputVariable.payload/ns3:Shipping/ns3:ShippingProvider/ns3:Name</to>
-      </copy>
-    </assign>
+    <invoke name="queryCoherence" portType="ns7:Get_ptt" partnerLink="queryCoherence" operation="Get"
+            inputVariable="queryCoherence_Get_InputVariable" outputVariable="queryCoherence_Get_OutputVariable">
+      <bpelx:toProperties>
+        <bpelx:toProperty name="jca.coherence.Key" variable="shippingMethodID"/>
+      </bpelx:toProperties>
+    </invoke>
+    <if name="DataInCache">
+      <documentation>
+        <![CDATA[DataInCache]]>
+      </documentation>
+      <condition>$queryCoherence_Get_OutputVariable.body/ns2:E2E1201_ShippingMethods/ns2:providerId/ns2:name</condition>
+      <assign name="assignShippingProvider">
+        <copy bpelx:insertMissingToData="yes">
+          <from>$queryCoherence_Get_OutputVariable.body/ns2:E2E1201_ShippingMethods/ns2:providerId/ns2:name</from>
+          <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$inputVariable.payload/ns3:Shipping/ns3:ShippingProvider/ns3:Name</to>
+        </copy>
+      </assign>
+      <else>
+        <documentation>
+          <![CDATA[DataNotInCache]]>
+        </documentation>
+        <sequence>
+          <assign name="assignShippingMethodForDBAdapter">
+            <copy>
+              <from>$shippingMethodID</from>
+              <to>$getShippingProvider_getShippingProviderSelect_InputVariable.getShippingProviderSelect_inputParameters/ns2:smi</to>
+            </copy>
+          </assign>
+          <invoke name="getShippingProvider" partnerLink="getShippingProvider" portType="ns1:getShippingProvider_ptt"
+                  operation="getShippingProviderSelect"
+                  inputVariable="getShippingProvider_getShippingProviderSelect_InputVariable"
+                  outputVariable="getShippingProvider_getShippingProviderSelect_OutputVariable"
+                  bpelx:invokeAsDetail="no"/>
+          <assign name="assignShippingProvider">
+            <copy bpelx:insertMissingToData="yes">
+              <from>$getShippingProvider_getShippingProviderSelect_OutputVariable.E2E1201_ShippingMethodsCollection/ns2:E2E1201_ShippingMethods/ns2:providerId/ns2:name</from>
+              <to>$inputVariable.payload/ns3:Shipping/ns3:ShippingProvider/ns3:Name</to>
+            </copy>
+          </assign>
+          <assign name="assignCoherenceInput">
+            <copy>
+              <from>$getShippingProvider_getShippingProviderSelect_OutputVariable.E2E1201_ShippingMethodsCollection</from>
+              <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$putIntoCoherence_Put_InputVariable.body</to>
+            </copy>
+          </assign>
+          <invoke name="putIntoCoherence" portType="ns8:Put_ptt" partnerLink="putIntoCoherence" operation="Put"
+                  inputVariable="putIntoCoherence_Put_InputVariable"
+                  outputVariable="putIntoCoherence_Put_OutputVariable">
+            <bpelx:toProperties>
+              <bpelx:toProperty name="jca.coherence.Key" variable="shippingMethodID"/>
+            </bpelx:toProperties>
+          </invoke>
+        </sequence>
+      </else>
+    </if>
     <assign name="assignShipping">
       <copy>
         <from>$inputVariable.payload/ns3:Shipping</from>

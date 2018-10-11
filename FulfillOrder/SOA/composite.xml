@@ -23,6 +23,10 @@
           location="WSDLs/DetermineShippingRules_DecisionService_1.wsdl" importType="wsdl"/>
   <import namespace="http://xmlns.oracle.com/e2e-1201-composites2/FulfillOrder/packAndShipOrder"
           location="WSDLs/packAndShipOrder.wsdl" importType="wsdl"/>
+  <import namespace="http://xmlns.oracle.com/pcbpel/adapter/coherence/e2e-1201-composites2/FulfillOrder/queryCoherence"
+          location="WSDLs/queryCoherence.wsdl" importType="wsdl"/>
+  <import namespace="http://xmlns.oracle.com/pcbpel/adapter/coherence/e2e-1201-composites2/FulfillOrder/putIntoCoherence"
+          location="WSDLs/putIntoCoherence.wsdl" importType="wsdl"/>
   <service name="ReceiveOrdersReadyForShipment" ui:wsdlLocation="WSDLs/ReceiveOrdersReadyForShipment.wsdl">
     <interface.wsdl interface="http://xmlns.oracle.com/pcbpel/adapter/db/e2e-1201-composites-templates/FulfillOrder/ReceiveOrdersReadyForShipment#wsdl.interface(ReceiveOrdersReadyForShipment_ptt)"/>
     <binding.jca config="Adapters/ReceiveOrdersReadyForShipment_db.jca">
@@ -64,6 +68,12 @@
       <reference name="packAndShipOrder" ui:wsdlLocation="WSDLs/packAndShipOrder.wsdl">
         <interface.wsdl interface="http://xmlns.oracle.com/e2e-1201-composites2/FulfillOrder/packAndShipOrder#wsdl.interface(packAndShipOrder_ptt)"/>
       </reference>
+      <reference name="queryCoherence" ui:wsdlLocation="WSDLs/queryCoherence.wsdl">
+        <interface.wsdl interface="http://xmlns.oracle.com/pcbpel/adapter/coherence/e2e-1201-composites2/FulfillOrder/queryCoherence#wsdl.interface(Get_ptt)"/>
+      </reference>
+      <reference name="putIntoCoherence" ui:wsdlLocation="WSDLs/putIntoCoherence.wsdl">
+        <interface.wsdl interface="http://xmlns.oracle.com/pcbpel/adapter/coherence/e2e-1201-composites2/FulfillOrder/putIntoCoherence#wsdl.interface(Put_ptt)"/>
+      </reference>
     </componentType>
     <property name="bpel.config.transaction" type="xs:string" many="false">required</property>
     <property name="bpel.config.oneWayDeliveryPolicy" type="xs:string" many="false">async.persist</property>
@@ -92,6 +102,14 @@
       <property name="reorderJsonAsPerXmlSchema" type="xs:boolean" many="false" override="may">true</property>
     </binding.rest>
   </reference>
+  <reference name="queryCoherence" ui:wsdlLocation="WSDLs/queryCoherence.wsdl">
+    <interface.wsdl interface="http://xmlns.oracle.com/pcbpel/adapter/coherence/e2e-1201-composites2/FulfillOrder/queryCoherence#wsdl.interface(Get_ptt)"/>
+    <binding.jca config="Adapters/queryCoherence_coherence.jca"/>
+  </reference>
+  <reference name="putIntoCoherence" ui:wsdlLocation="WSDLs/putIntoCoherence.wsdl">
+    <interface.wsdl interface="http://xmlns.oracle.com/pcbpel/adapter/coherence/e2e-1201-composites2/FulfillOrder/putIntoCoherence#wsdl.interface(Put_ptt)"/>
+    <binding.jca config="Adapters/putIntoCoherence_coherence.jca"/>
+  </reference>
   <wire>
     <source.uri>ReceiveOrdersReadyForShipment</source.uri>
     <target.uri>receiveOrderToShip/ReceiveOrdersReadyForShipment</target.uri>
@@ -111,5 +129,13 @@
   <wire>
     <source.uri>fulfillOrder/packAndShipOrder</source.uri>
     <target.uri>packAndShipOrder</target.uri>
+  </wire>
+  <wire>
+    <source.uri>fulfillOrder/queryCoherence</source.uri>
+    <target.uri>queryCoherence</target.uri>
+  </wire>
+  <wire>
+    <source.uri>fulfillOrder/putIntoCoherence</source.uri>
+    <target.uri>putIntoCoherence</target.uri>
   </wire>
 </composite>
