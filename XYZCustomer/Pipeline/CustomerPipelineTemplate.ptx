@@ -12,11 +12,13 @@
                         <con2:id>_ActionId-N3f57c7ff.N6f64108c.0.1668984ec94.N7ff9</con2:id>
                         <con1:varName>body</con1:varName>
                     </con1:validate>
+                    <con:placeholder-node id="PlaceholderID_N3f57c7ff.N6f64108c.0.1668984ec94.N7ff8"/>
                 </con:actions>
             </con:stage>
+            <con:placeholder-node id="PlaceholderID_N3f57c7ff.N6f64108c.0.1668984ec94.N7ff7"/>
         </con:pipeline>
         <con:pipeline type="response" name="response-N3f57c7ff.N6f64108c.0.1668984ec94.N7ffe">
-            <con:stage id="_StageId-N3f57c7ff.N6f64108c.0.1668984ec94.N7ffc" name="Stage1">
+            <con:stage id="_StageId-N3f57c7ff.N6f64108c.0.1668984ec94.N7ffc" name="Stage">
                 <con:context/>
                 <con:actions/>
             </con:stage>
