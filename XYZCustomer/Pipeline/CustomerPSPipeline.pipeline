@@ -12,6 +12,81 @@
             <con:snippetVersion>1.0</con:snippetVersion>
         </con:xqConfiguration>
     </con:coreEntry>
-    <con:router/>
+    <con:router>
+        <con:template-overrides>
+            <con:template-branch-override id="_FlowId-N3f57c7ff.N6f64108c.0.1668984ec94.N8000">
+                <con:branch-node>
+                    <con:branch-table>
+                        <con:branch name="CreateCustomer">
+                            <con:operator>equals</con:operator>
+                            <con:value/>
+                            <con:template-overrides>
+                                <con:placeholder-override id="PlaceholderID_N3f57c7ff.N6f64108c.0.1668984ec94.N7ff8">
+                                    <con:actions/>
+                                </con:placeholder-override>
+                                <con:placeholder-override id="PlaceholderID_N3f57c7ff.N6f64108c.0.1668984ec94.N7ff7"/>
+                                <con:placeholder-override id="PlaceholderID_N3f57c7ff.N6f64108c.0.1668984ec94.N7f8d">
+                                    <con:actions/>
+                                </con:placeholder-override>
+                            </con:template-overrides>
+                        </con:branch>
+                        <con:branch name="UpdateCustomer">
+                            <con:operator>equals</con:operator>
+                            <con:value/>
+                            <con:template-overrides>
+                                <con:placeholder-override id="PlaceholderID_N3f57c7ff.N6f64108c.0.1668984ec94.N7ff8">
+                                    <con:actions/>
+                                </con:placeholder-override>
+                                <con:placeholder-override id="PlaceholderID_N3f57c7ff.N6f64108c.0.1668984ec94.N7ff7"/>
+                                <con:placeholder-override id="PlaceholderID_N3f57c7ff.N6f64108c.0.1668984ec94.N7f8d">
+                                    <con:actions/>
+                                </con:placeholder-override>
+                            </con:template-overrides>
+                        </con:branch>
+                        <con:branch name="DeleteCustomer">
+                            <con:operator>equals</con:operator>
+                            <con:value/>
+                            <con:template-overrides>
+                                <con:placeholder-override id="PlaceholderID_N3f57c7ff.N6f64108c.0.1668984ec94.N7ff8">
+                                    <con:actions/>
+                                </con:placeholder-override>
+                                <con:placeholder-override id="PlaceholderID_N3f57c7ff.N6f64108c.0.1668984ec94.N7ff7"/>
+                                <con:placeholder-override id="PlaceholderID_N3f57c7ff.N6f64108c.0.1668984ec94.N7f8d">
+                                    <con:actions/>
+                                </con:placeholder-override>
+                            </con:template-overrides>
+                        </con:branch>
+                        <con:branch name="MergeCustomer">
+                            <con:operator>equals</con:operator>
+                            <con:value/>
+                            <con:template-overrides>
+                                <con:placeholder-override id="PlaceholderID_N3f57c7ff.N6f64108c.0.1668984ec94.N7ff8">
+                                    <con:actions/>
+                                </con:placeholder-override>
+                                <con:placeholder-override id="PlaceholderID_N3f57c7ff.N6f64108c.0.1668984ec94.N7ff7"/>
+                                <con:placeholder-override id="PlaceholderID_N3f57c7ff.N6f64108c.0.1668984ec94.N7f8d">
+                                    <con:actions/>
+                                </con:placeholder-override>
+                            </con:template-overrides>
+                        </con:branch>
+                        <con:branch name="MigrateCustomer">
+                            <con:operator>equals</con:operator>
+                            <con:value/>
+                            <con:template-overrides>
+                                <con:placeholder-override id="PlaceholderID_N3f57c7ff.N6f64108c.0.1668984ec94.N7ff8">
+                                    <con:actions/>
+                                </con:placeholder-override>
+                                <con:placeholder-override id="PlaceholderID_N3f57c7ff.N6f64108c.0.1668984ec94.N7ff7"/>
+                                <con:placeholder-override id="PlaceholderID_N3f57c7ff.N6f64108c.0.1668984ec94.N7f8d">
+                                    <con:actions/>
+                                </con:placeholder-override>
+                            </con:template-overrides>
+                        </con:branch>
+                        <con:default-branch/>
+                    </con:branch-table>
+                </con:branch-node>
+            </con:template-branch-override>
+        </con:template-overrides>
+    </con:router>
     <con:template ref="XYZCustomer/Pipeline/CustomerPipelineTemplate"/>
 </con:pipelineEntry>
