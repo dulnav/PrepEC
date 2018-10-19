@@ -78,8 +78,14 @@
                                                     <con1:actions>
                                                         <con1:wsCallout>
                                                             <con2:id xmlns:con2="http://www.bea.com/wli/sb/stages/config">_ActionId-N3f57c7ff.N6f64108c.0.1668984ec94.N7bc3</con2:id>
-                                                            <con1:request/>
-                                                            <con1:response/>
+                                                            <con1:service ref="XYZCommon/BusinessServices/AddrValidationServiceBS" xsi:type="ref:BusinessServiceRef" xmlns:ref="http://www.bea.com/wli/sb/reference"/>
+                                                            <con1:operation>validate_address</con1:operation>
+                                                            <con1:request>
+                                                                <con1:body/>
+                                                            </con1:request>
+                                                            <con1:response>
+                                                                <con1:body/>
+                                                            </con1:response>
                                                             <con1:requestTransform/>
                                                             <con1:responseTransform/>
                                                         </con1:wsCallout>
