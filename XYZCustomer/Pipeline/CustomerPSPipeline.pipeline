@@ -135,6 +135,7 @@
                                     <con:stage id="_StageId-N3f57c7ff.N6f64108c.0.1668984ec94.N7ae1" name="Defaulting">
                                         <con:context>
                                             <con1:userNsDecl prefix="cus" namespace="http://xmlns.xyzbank.com/schema/Customer" xmlns:con1="http://www.bea.com/wli/sb/stages/config"/>
+                                            <con1:userNsDecl prefix="con" namespace="http://www.bea.com/wli/sb/services/security/config" xmlns:con1="http://www.bea.com/wli/sb/stages/config"/>
                                         </con:context>
                                         <con:actions>
                                             <con1:ifThenElse xmlns:con1="http://www.bea.com/wli/sb/stages/transform/config">
@@ -162,14 +163,56 @@
                                                 <con1:service ref="XYZCommon/BusinessServices/UserIDServiceBS" xsi:type="ref:BusinessServiceRef" xmlns:ref="http://www.bea.com/wli/sb/reference"/>
                                                 <con1:operation>create_uniqueid</con1:operation>
                                                 <con1:request>
-                                                    <con1:body/>
+                                                    <con1:body wrapped="false">userIDReq</con1:body>
+                                                    <con1:header>userIDReqHdr</con1:header>
                                                 </con1:request>
                                                 <con1:response>
-                                                    <con1:body/>
+                                                    <con1:body wrapped="false">userIDResp</con1:body>
                                                 </con1:response>
-                                                <con1:requestTransform/>
+                                                <con1:requestTransform>
+                                                    <con1:assign varName="varSA">
+                                                        <con2:id xmlns:con2="http://www.bea.com/wli/sb/stages/config">_ActionId-N3f57c7ff.N6f64108c.0.1668984ec94.N7a96</con2:id>
+                                                        <con1:expr>
+                                                            <con2:xqueryText xmlns:con2="http://www.bea.com/wli/sb/stages/config">fn-bea:lookupBasicCredentials('XYZCustomer/Utilities/UserIDSvcCred')</con2:xqueryText>
+                                                        </con1:expr>
+                                                    </con1:assign>
+                                                    <con1:assign varName="userIDReqHdr">
+                                                        <con2:id xmlns:con2="http://www.bea.com/wli/sb/stages/config">_ActionId-N3f57c7ff.N6f64108c.0.1668984ec94.N7a93</con2:id>
+                                                        <con1:expr>
+                                                            <con2:xqueryText xmlns:con2="http://www.bea.com/wli/sb/stages/config"><![CDATA[<soap-env:Header>
+<usr:UserIDConfiguration xmlns:usr="urn:xyzbank:cust:schema:userid">
+<usr:UserName>{$varSA/con:username/text()}</usr:UserName>
+<usr:Password>{$varSA/con:password/text()}</usr:Password>
+</usr:UserIDConfiguration>
+</soap-env:Header>]]></con2:xqueryText>
+                                                        </con1:expr>
+                                                    </con1:assign>
+                                                    <con1:assign varName="userIDReq">
+                                                        <con2:id xmlns:con2="http://www.bea.com/wli/sb/stages/config">_ActionId-N3f57c7ff.N6f64108c.0.1668984ec94.N7a90</con2:id>
+                                                        <con1:expr>
+                                                            <con2:xqueryText xmlns:con2="http://www.bea.com/wli/sb/stages/config">&lt;usr:user_input xmlns:usr="urn:xyzbank:cust:schema:userid">
+&lt;usr:system>LEGACY&lt;/usr:system>
+&lt;/usr:user_input></con2:xqueryText>
+                                                        </con1:expr>
+                                                    </con1:assign>
+                                                </con1:requestTransform>
                                                 <con1:responseTransform/>
                                             </con1:wsCallout>
+                                            <con1:ifThenElse xmlns:con1="http://www.bea.com/wli/sb/stages/transform/config">
+                                                <con2:id xmlns:con2="http://www.bea.com/wli/sb/stages/config">_ActionId-N3f57c7ff.N6f64108c.0.1668984ec94.N7a89</con2:id>
+                                                <con1:case id="_BranchId-N3f57c7ff.N6f64108c.0.1668984ec94.N7a88">
+                                                    <con1:condition>
+                                                        <con2:xqueryText xmlns:con2="http://www.bea.com/wli/sb/stages/config">$userIDResp/Status/text()!='S'</con2:xqueryText>
+                                                    </con1:condition>
+                                                    <con1:actions>
+                                                        <con1:Error>
+                                                            <con2:id xmlns:con2="http://www.bea.com/wli/sb/stages/config">_ActionId-N3f57c7ff.N6f64108c.0.1668984ec94.N7a54</con2:id>
+                                                            <con1:errCode>XYZ-003</con1:errCode>
+                                                            <con1:message>Failure in Unique User ID Cretion.</con1:message>
+                                                        </con1:Error>
+                                                    </con1:actions>
+                                                </con1:case>
+                                            </con1:ifThenElse>
                                         </con:actions>
                                     </con:stage>
                                 </con:placeholder-override>
