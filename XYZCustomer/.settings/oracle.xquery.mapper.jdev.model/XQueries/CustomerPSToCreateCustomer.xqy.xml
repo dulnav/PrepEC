@@ -1,0 +1,6 @@
+<view_states>
+   <function arity="1" name="CustomerPSToCreateCustomer.">
+      <source_tree_view last.visible.row="13" last.visible.path="/sourceRoot[[0]]/Customer[[0]]/ZipCode[[12]]" first.visible.path="/sourceRoot[[0]]/Customer[[0]]" expanded.paths="/sourceRoot[[0]]/Customer[[0]]" first.visible.row="0" selected.paths="/sourceRoot[[0]]"/>
+      <target_tree_view last.visible.row="14" last.visible.path="/TargetRoot[[0]]/customer[[0]]/Conditional[[8]]/addr_line3[[0]]" first.visible.path="/TargetRoot[[0]]/customer[[0]]" expanded.paths="/TargetRoot[[0]]/customer[[0]]&#xA;/TargetRoot[[0]]/customer[[0]]/Conditional[[1]]&#xA;/TargetRoot[[0]]/customer[[0]]/Conditional[[7]]&#xA;/TargetRoot[[0]]/customer[[0]]/Conditional[[8]]&#xA;/TargetRoot[[0]]/customer[[0]]/Conditional[[9]]" first.visible.row="0" selected.paths=""/>
+   </function>
+</view_states>
