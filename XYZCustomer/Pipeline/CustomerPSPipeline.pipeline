@@ -157,6 +157,19 @@
                                                     </con1:actions>
                                                 </con1:case>
                                             </con1:ifThenElse>
+                                            <con1:wsCallout xmlns:con1="http://www.bea.com/wli/sb/stages/transform/config">
+                                                <con2:id xmlns:con2="http://www.bea.com/wli/sb/stages/config">_ActionId-N3f57c7ff.N6f64108c.0.1668984ec94.N7a99</con2:id>
+                                                <con1:service ref="XYZCommon/BusinessServices/UserIDServiceBS" xsi:type="ref:BusinessServiceRef" xmlns:ref="http://www.bea.com/wli/sb/reference"/>
+                                                <con1:operation>create_uniqueid</con1:operation>
+                                                <con1:request>
+                                                    <con1:body/>
+                                                </con1:request>
+                                                <con1:response>
+                                                    <con1:body/>
+                                                </con1:response>
+                                                <con1:requestTransform/>
+                                                <con1:responseTransform/>
+                                            </con1:wsCallout>
                                         </con:actions>
                                     </con:stage>
                                 </con:placeholder-override>
