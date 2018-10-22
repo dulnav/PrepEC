@@ -139,18 +139,18 @@
                                         </con:context>
                                         <con:actions>
                                             <con1:ifThenElse xmlns:con1="http://www.bea.com/wli/sb/stages/transform/config">
-                                                <con2:id xmlns:con2="http://www.bea.com/wli/sb/stages/config">_ActionId-N3f57c7ff.N6f64108c.0.1668984ec94.N7ad1</con2:id>
-                                                <con1:case id="_BranchId-N3f57c7ff.N6f64108c.0.1668984ec94.N7ad0">
+                                                <con2:id xmlns:con2="http://www.bea.com/wli/sb/stages/config">_ActionId-N3f57c7ff.N45d968fe.0.1669cde7063.N7adb</con2:id>
+                                                <con1:case id="_BranchId-N3f57c7ff.N45d968fe.0.1669cde7063.N7ada">
                                                     <con1:condition>
                                                         <con2:xqueryText xmlns:con2="http://www.bea.com/wli/sb/stages/config">fn:empty($body/cus:Customer/CustomerType)</con2:xqueryText>
                                                     </con1:condition>
                                                     <con1:actions>
                                                         <con1:insert varName="body">
-                                                            <con2:id xmlns:con2="http://www.bea.com/wli/sb/stages/config">_ActionId-N3f57c7ff.N6f64108c.0.1668984ec94.N7a9c</con2:id>
+                                                            <con2:id xmlns:con2="http://www.bea.com/wli/sb/stages/config">_ActionId-N3f57c7ff.N45d968fe.0.1669cde7063.N7aa6</con2:id>
                                                             <con1:location>
                                                                 <con2:xpathText xmlns:con2="http://www.bea.com/wli/sb/stages/config">./cus:Customer/DOB</con2:xpathText>
                                                             </con1:location>
-                                                            <con1:where>after</con1:where>
+                                                            <con1:where>first-child</con1:where>
                                                             <con1:expr>
                                                                 <con2:xqueryText xmlns:con2="http://www.bea.com/wli/sb/stages/config">&lt;CustomerType>Individual&lt;/CustomerType></con2:xqueryText>
                                                             </con1:expr>
