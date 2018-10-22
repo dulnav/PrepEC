@@ -84,10 +84,10 @@
                                                             <con1:service ref="XYZCommon/BusinessServices/AddrValidationServiceBS" xsi:type="ref:BusinessServiceRef" xmlns:ref="http://www.bea.com/wli/sb/reference"/>
                                                             <con1:operation>validate_address</con1:operation>
                                                             <con1:request>
-                                                                <con1:body/>
+                                                                <con1:body wrapped="true">addrReqBody</con1:body>
                                                             </con1:request>
                                                             <con1:response>
-                                                                <con1:body/>
+                                                                <con1:body wrapped="true">addrRepBody</con1:body>
                                                             </con1:response>
                                                             <con1:requestTransform>
                                                                 <con1:assign varName="addrReqBody">
@@ -290,12 +290,104 @@
                             <con:value/>
                             <con:template-overrides>
                                 <con:placeholder-override id="PlaceholderID_N3f57c7ff.N6f64108c.0.1668984ec94.N7ff8">
-                                    <con:actions/>
+                                    <con:actions>
+                                        <con1:ifThenElse xmlns:con1="http://www.bea.com/wli/sb/stages/transform/config">
+                                            <con2:id xmlns:con2="http://www.bea.com/wli/sb/stages/config">_ActionId-N3f57c7ff.N6f64108c.0.1668984ec94.N79f4</con2:id>
+                                            <con1:case id="_BranchId-N3f57c7ff.N6f64108c.0.1668984ec94.N79f3">
+                                                <con1:condition>
+                                                    <con2:xqueryText xmlns:con2="http://www.bea.com/wli/sb/stages/config">not(fn:empty($body/cus:Customer/Email)) and fn:string-length(fn-bea:trim($body/cus:Customer/Email/text()))>0</con2:xqueryText>
+                                                </con1:condition>
+                                                <con1:actions>
+                                                    <con1:ifThenElse>
+                                                        <con2:id xmlns:con2="http://www.bea.com/wli/sb/stages/config">_ActionId-N3f57c7ff.N6f64108c.0.1668984ec94.N798a</con2:id>
+                                                        <con1:case id="_BranchId-N3f57c7ff.N6f64108c.0.1668984ec94.N7989">
+                                                            <con1:condition>
+                                                                <con2:xqueryText xmlns:con2="http://www.bea.com/wli/sb/stages/config">not(fn:matches($body/cus:Customer/Email/text(),'[a-zA-Z0-9]+@[a-zA-Z]+\.[a-zA-Z]{2,3}','i'))</con2:xqueryText>
+                                                            </con1:condition>
+                                                            <con1:actions>
+                                                                <con1:Error>
+                                                                    <con2:id xmlns:con2="http://www.bea.com/wli/sb/stages/config">_ActionId-N3f57c7ff.N6f64108c.0.1668984ec94.N7955</con2:id>
+                                                                    <con1:errCode>XYZ-0001</con1:errCode>
+                                                                    <con1:message>Email is not valid</con1:message>
+                                                                </con1:Error>
+                                                            </con1:actions>
+                                                        </con1:case>
+                                                    </con1:ifThenElse>
+                                                    <con1:ifThenElse>
+                                                        <con2:id xmlns:con2="http://www.bea.com/wli/sb/stages/config">_ActionId-N3f57c7ff.N6f64108c.0.1668984ec94.N7948</con2:id>
+                                                        <con1:case id="_BranchId-N3f57c7ff.N6f64108c.0.1668984ec94.N7947">
+                                                            <con1:condition>
+                                                                <con2:xqueryText xmlns:con2="http://www.bea.com/wli/sb/stages/config">fn:empty($body/cus:Customer/CustomerID)or
+fn:string-length(fn-bea:trim($body/cus:Customer/CustomerID/text()))=0</con2:xqueryText>
+                                                            </con1:condition>
+                                                            <con1:actions>
+                                                                <con1:Error>
+                                                                    <con2:id xmlns:con2="http://www.bea.com/wli/sb/stages/config">_ActionId-N3f57c7ff.N6f64108c.0.1668984ec94.N7913</con2:id>
+                                                                    <con1:errCode>XYZ-0005</con1:errCode>
+                                                                    <con1:message>Custmoer ID is mandatory for Update</con1:message>
+                                                                </con1:Error>
+                                                            </con1:actions>
+                                                        </con1:case>
+                                                    </con1:ifThenElse>
+                                                </con1:actions>
+                                            </con1:case>
+                                        </con1:ifThenElse>
+                                    </con:actions>
                                 </con:placeholder-override>
+                                <con:stage-override id="_StageId-N3f57c7ff.N6f64108c.0.1668984ec94.N7ffd">
+                                    <con:context>
+                                        <con1:userNsDecl prefix="cus" namespace="http://xmlns.xyzbank.com/schema/Customer" xmlns:con1="http://www.bea.com/wli/sb/stages/config"/>
+                                    </con:context>
+                                </con:stage-override>
                                 <con:placeholder-override id="PlaceholderID_N3f57c7ff.N6f64108c.0.1668984ec94.N7ff7"/>
                                 <con:placeholder-override id="PlaceholderID_N3f57c7ff.N6f64108c.0.1668984ec94.N7f8d">
-                                    <con:actions/>
+                                    <con:actions>
+                                        <con1:route xmlns:con1="http://www.bea.com/wli/sb/stages/routing/config">
+                                            <con2:id xmlns:con2="http://www.bea.com/wli/sb/stages/config">_ActionId-N3f57c7ff.N6f64108c.0.1668984ec94.N7910</con2:id>
+                                            <con1:service ref="XYZCommon/BusinessServices/CustomerServiceBS" xsi:type="ref:BusinessServiceRef" xmlns:ref="http://www.bea.com/wli/sb/reference"/>
+                                            <con1:operation>update_customer</con1:operation>
+                                            <con1:outboundTransform>
+                                                <con2:replace contents-only="true" varName="body" xmlns:con2="http://www.bea.com/wli/sb/stages/transform/config">
+                                                    <con3:id xmlns:con3="http://www.bea.com/wli/sb/stages/config">_ActionId-N3f57c7ff.N6f64108c.0.1668984ec94.N790d</con3:id>
+                                                    <con2:expr>
+                                                        <con3:xsltTransform xmlns:con3="http://www.bea.com/wli/sb/stages/config">
+                                                            <con3:resource ref="XYZCustomer/XSLTs/CustomerPSToUpdateCustomer"/>
+                                                            <con3:input>$body/*</con3:input>
+                                                        </con3:xsltTransform>
+                                                    </con2:expr>
+                                                </con2:replace>
+                                            </con1:outboundTransform>
+                                            <con1:responseTransform>
+                                                <con2:ifThenElse xmlns:con2="http://www.bea.com/wli/sb/stages/transform/config">
+                                                    <con3:id xmlns:con3="http://www.bea.com/wli/sb/stages/config">_ActionId-N3f57c7ff.N6f64108c.0.1668984ec94.N789d</con3:id>
+                                                    <con2:case id="_BranchId-N3f57c7ff.N6f64108c.0.1668984ec94.N789c">
+                                                        <con2:condition>
+                                                            <con3:xqueryText xmlns:con3="http://www.bea.com/wli/sb/stages/config">$body/cust:status_msg/status/text()!='S'</con3:xqueryText>
+                                                        </con2:condition>
+                                                        <con2:actions>
+                                                            <con2:assign varName="faultVar">
+                                                                <con3:id xmlns:con3="http://www.bea.com/wli/sb/stages/config">_ActionId-N3f57c7ff.N6f64108c.0.1668984ec94.N789b</con3:id>
+                                                                <con2:expr>
+                                                                    <con3:xqueryText xmlns:con3="http://www.bea.com/wli/sb/stages/config">$body/*</con3:xqueryText>
+                                                                </con2:expr>
+                                                            </con2:assign>
+                                                            <con2:Error>
+                                                                <con3:id xmlns:con3="http://www.bea.com/wli/sb/stages/config">_ActionId-N3f57c7ff.N6f64108c.0.1668984ec94.N789a</con3:id>
+                                                                <con2:errCode>XYZ-0004</con2:errCode>
+                                                                <con2:message>Error in CustomerCreation.</con2:message>
+                                                            </con2:Error>
+                                                        </con2:actions>
+                                                    </con2:case>
+                                                </con2:ifThenElse>
+                                            </con1:responseTransform>
+                                        </con1:route>
+                                    </con:actions>
                                 </con:placeholder-override>
+                                <con:route-node-override id="_RouteId-N3f57c7ff.N6f64108c.0.1668984ec94.N7ff3">
+                                    <con:context>
+                                        <con1:userNsDecl prefix="cust" namespace="urn:xyzbank:cust:schema:customer" xmlns:con1="http://www.bea.com/wli/sb/stages/config"/>
+                                    </con:context>
+                                </con:route-node-override>
                             </con:template-overrides>
                         </con:branch>
                         <con:branch name="DeleteCustomer">

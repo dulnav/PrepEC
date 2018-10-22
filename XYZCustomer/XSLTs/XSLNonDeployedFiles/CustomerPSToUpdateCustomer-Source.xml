@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Customer xmlns="http://xmlns.xyzbank.com/schema/Customer">
+   <CustomerID xmlns="">CustomerID121</CustomerID>
+   <FirstName xmlns="">FirstName122</FirstName>
+   <LastName xmlns="">LastName123</LastName>
+   <Email xmlns="">Email124</Email>
+   <Phone xmlns="">Phone125</Phone>
+   <DOB xmlns="">2018-10-22</DOB>
+   <CustomerType xmlns="">Individual</CustomerType>
+   <Address1 xmlns="">Address1127</Address1>
+   <Address2 xmlns="">Address2128</Address2>
+   <Address3 xmlns="">Address3129</Address3>
+   <State xmlns="">State130</State>
+   <Country xmlns="">Country131</Country>
+   <ZipCode xmlns="">ZipCode132</ZipCode>
+</Customer>

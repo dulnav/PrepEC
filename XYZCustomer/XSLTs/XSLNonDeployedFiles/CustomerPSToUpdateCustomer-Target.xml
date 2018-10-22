@@ -1,0 +1,13 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<tns:customer xmlns:n3="urn:xyzbank:cust:wsdl:customer" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="urn:xyzbank:cust:schema:customer">
+   <customer_id>CustomerID121</customer_id>
+   <full_name>FirstName122,LastName123</full_name>
+   <customer_type>Individual</customer_type>
+   <date_of_birth>2018-10-22</date_of_birth>
+   <email>Email124</email>
+   <phone>Phone125</phone>
+   <addr_line1>Address1127</addr_line1>
+   <addr_line2>Address2128</addr_line2>
+   <addr_line3>Address3129</addr_line3>
+   <addr_line4>State130,Country131,ZipCode132</addr_line4>
+</tns:customer>

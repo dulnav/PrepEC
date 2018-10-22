@@ -202,4 +202,5 @@
       </hash>
    </hash>
    <value n="SOA_DVM_FOLDER_NAME" v="DVM/"/>
+   <value n="SOA_TRANSFORMATION_FOLDER_NAME" v="XSLTs/"/>
 </jpr:project>

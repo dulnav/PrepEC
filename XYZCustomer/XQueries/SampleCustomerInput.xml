@@ -1,6 +1,6 @@
 <ns2:addrval_input xmlns:ns2="urn:xyzbank:cust:schema:address">
-  <address_line>Address17,Address28,Address39</address_line>
-  <state>State10</state>
-  <country>Country11</country>
-  <zip_code>ZipCode12</zip_code>
+  <address_line>Address119,Address220,Address321</address_line>
+  <state>State22</state>
+  <country>Country23</country>
+  <zip_code>ZipCode24</zip_code>
 </ns2:addrval_input>
