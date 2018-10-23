@@ -36,8 +36,30 @@
         <bpel:variable name="CustInfoResp" messageType="ns1:get_customer_resp"/>
         <bpel:variable name="CustOrderResp" messageType="ns2:get_customer_orders_resp"/>
         <bpel:variable name="CustAccResp" messageType="ns3:get_customer_accounts_resp"/>
+        <bpel:variable name="faultVar" messageType="bind:GenericFault"/>
     </bpel:variables>
-
+    <bpel:faultHandlers>
+        <bpel:catchAll ext:soapFaultVariable="soapFaulVar">
+            <bpel:sequence>
+                <bpel:empty/>
+                <bpel:reply operation="GetCustomerInfo" partnerLink="CustMigrationSplitJoin" faultName="bind:FaultMsg"
+                            variable="faultVar"/>
+                <bpel:exit/>
+                <bpel:assign>
+                    <bpel:extensionAssignOperation>
+                        <trf:assign varName="faultVar.parameters">
+                            <trf:expr>
+                                <expr:xqueryText>&lt;custinfo:fault_msg xmlns:custinfo="urn:xyzbank:cust:schema:customerinfo"&gt;
+&lt;custinfo:error_code&gt;XYZ-0009&lt;/custinfo:error_code&gt;
+&lt;custinfo:error_message&gt;Error in join operation.&lt;/custinfo:error_message&gt;
+&lt;/custinfo:fault_msg&gt;</expr:xqueryText>
+                            </trf:expr>
+                        </trf:assign>
+                    </bpel:extensionAssignOperation>
+                </bpel:assign>
+            </bpel:sequence>
+        </bpel:catchAll>
+    </bpel:faultHandlers>
     <bpel:sequence>
         <bpel:receive partnerLink="CustMigrationSplitJoin" operation="GetCustomerInfo" variable="request" createInstance="yes">
 	           <rescon:receiveInfo>
