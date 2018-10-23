@@ -52,7 +52,13 @@
                 <bpel:sequence>
                     <bpel:assign>
                         <bpel:extensionAssignOperation bea:name="AssignCustInfoReq">
-                            <trf:assign/>
+                            <trf:assign varName="CustInfoReq.payload">
+                                <trf:expr>
+                                    <expr:xqueryText>&lt;cust:customerid_input xmlns:cust="urn:xyzbank:cust:schema:customer"&gt;
+&lt;customer_id&gt;{$request.parameters/customer_id/text()}&lt;/customer_id&gt;
+&lt;/cust:customerid_input&gt;</expr:xqueryText>
+                                </trf:expr>
+                            </trf:assign>
                         </bpel:extensionAssignOperation>
                     </bpel:assign>
                     <bpel:invoke partnerLink="CustomerServiceBS" operation="get_customer" inputVariable="CustInfoReq"
@@ -71,7 +77,13 @@
                 <bpel:sequence>
                     <bpel:assign>
                         <bpel:extensionAssignOperation bea:name="AssignCustOrderReq">
-                            <trf:assign/>
+                            <trf:assign varName="CustOrderReq.parameters">
+                                <trf:expr>
+                                    <expr:xqueryText>&lt;ordr:order_input xmlns:ordr="urn:xyzbank:cust:schema:order"&gt;
+&lt;ordr:customer_id&gt;{$request.parameters/customer_id/text()}&lt;/ordr:customer_id&gt;
+&lt;/ordr:order_input&gt;</expr:xqueryText>
+                                </trf:expr>
+                            </trf:assign>
                         </bpel:extensionAssignOperation>
                     </bpel:assign>
                     <bpel:invoke partnerLink="CustomerOrderServiceBS" operation="get_customer_orders"
@@ -88,6 +100,17 @@
                     <bpel:variable name="CustAccReq" messageType="ns3:get_customer_accounts_req"/>
                 </bpel:variables>
                 <bpel:sequence>
+                    <bpel:assign>
+                        <bpel:extensionAssignOperation bea:name="AssignCustAccReq">
+                            <trf:assign varName="CustAccReq.parameters">
+                                <trf:expr>
+                                    <expr:xqueryText>&lt;acc:account_input xmlns:acc="urn:xyzbank:cust:schema:account"&gt;
+&lt;acc:customer_id&gt;{$request.parameters/customer_id/text()}&lt;/acc:customer_id&gt;
+&lt;/acc:account_input&gt;</expr:xqueryText>
+                                </trf:expr>
+                            </trf:assign>
+                        </bpel:extensionAssignOperation>
+                    </bpel:assign>
                     <bpel:invoke partnerLink="CustomerAccountServiceBS" operation="get_customer_accounts"
                                  inputVariable="CustAccReq" outputVariable="CustAccResp">
                         <rescon:invokeInfo>
