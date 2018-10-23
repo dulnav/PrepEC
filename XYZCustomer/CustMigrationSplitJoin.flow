@@ -98,6 +98,26 @@
                 </bpel:sequence>
             </bpel:scope>
         </bpel:flow>
+        <bpel:assign>
+            <bpel:extensionAssignOperation>
+                <trf:assign varName="request.parameters">
+                    <trf:expr>
+                        <expr:xqueryTransform>
+                            <expr:resource ref="XYZCustomer/XQueries/CustOrderAccountToCustInfo"/>
+                            <expr:param name="varCustomer">
+                                <expr:path>$CustOrderResp.parameters</expr:path>
+                            </expr:param>
+                            <expr:param name="varOrders">
+                                <expr:path>$CustAccResp.parameters</expr:path>
+                            </expr:param>
+                            <expr:param name="varAccount">
+                                <expr:path>$CustInfoResp.payload</expr:path>
+                            </expr:param>
+                        </expr:xqueryTransform>
+                    </trf:expr>
+                </trf:assign>
+            </bpel:extensionAssignOperation>
+        </bpel:assign>
         <bpel:reply partnerLink="CustMigrationSplitJoin" operation="GetCustomerInfo" variable="response"></bpel:reply>
     </bpel:sequence>
 </bpel:process>
