@@ -51,7 +51,7 @@
                 </bpel:variables>
                 <bpel:sequence>
                     <bpel:assign>
-                        <bpel:extensionAssignOperation>
+                        <bpel:extensionAssignOperation bea:name="AssignCustInfoReq">
                             <trf:assign/>
                         </bpel:extensionAssignOperation>
                     </bpel:assign>
@@ -69,6 +69,11 @@
                     <bpel:variable name="CustOrderReq" messageType="ns2:get_customer_orders_req"/>
                 </bpel:variables>
                 <bpel:sequence>
+                    <bpel:assign>
+                        <bpel:extensionAssignOperation bea:name="AssignCustOrderReq">
+                            <trf:assign/>
+                        </bpel:extensionAssignOperation>
+                    </bpel:assign>
                     <bpel:invoke partnerLink="CustomerOrderServiceBS" operation="get_customer_orders"
                                  inputVariable="CustOrderReq" outputVariable="CustOrderResp">
                         <rescon:invokeInfo>
