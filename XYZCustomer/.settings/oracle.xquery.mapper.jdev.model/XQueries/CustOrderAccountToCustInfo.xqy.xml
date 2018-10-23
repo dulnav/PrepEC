@@ -1,1 +1,6 @@
-<view_states></view_states>
+<view_states>
+   <function arity="3" name="getCustomerInfo">
+      <source_tree_view last.visible.row="13" last.visible.path="/sourceRoot[[0]]/account_output[[2]]" first.visible.path="/sourceRoot[[0]]/customer[[0]]" expanded.paths="/sourceRoot[[0]]/customer[[0]]&#xA;/sourceRoot[[0]]/order_output[[1]]" first.visible.row="0" selected.paths="/sourceRoot[[0]]/account_output[[2]]"/>
+      <target_tree_view last.visible.row="18" last.visible.path="/TargetRoot[[0]]/migrated_customer[[0]]/customer_accounts[[9]]/account[[0]]/Conditional[[6]]" first.visible.path="/TargetRoot[[0]]/migrated_customer[[0]]" expanded.paths="/TargetRoot[[0]]/migrated_customer[[0]]&#xA;/TargetRoot[[0]]/migrated_customer[[0]]/customer_accounts[[9]]&#xA;/TargetRoot[[0]]/migrated_customer[[0]]/customer_accounts[[9]]/account[[0]]&#xA;/TargetRoot[[0]]/migrated_customer[[0]]/customer_accounts[[9]]/account[[0]]/registration_details[[12]]&#xA;/TargetRoot[[0]]/migrated_customer[[0]]/customer_orders[[10]]" first.visible.row="0" selected.paths=""/>
+   </function>
+</view_states>
