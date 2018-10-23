@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpel:process name="CustMigrationSplitJoin"
+              targetNamespace="http://xmlns.oracle.com/ServiceBusAppl/XYZCustomer/"
+              xmlns:tns="http://xmlns.oracle.com/ServiceBusAppl/XYZCustomer/"
+              xmlns:bpel="http://docs.oasis-open.org/wsbpel/2.0/process/executable"
+              xmlns:rescon="http://www.bea.com/alsb/flow/resources/config"
+              xmlns:bea="http://www.bea.com/bpel/ui/extensions"
+              xmlns:ext="http://www.bea.com/bpel/extensions"
+              xmlns:expr="http://www.bea.com/wli/sb/stages/config"
+              xmlns:trf="http://www.bea.com/wli/sb/stages/transform/config"
+              xmlns:bind="http://xmlns.xyzbank.com/wsdl/Customer" 
+              bea:name="CustMigrationSplitJoin"
+              rescon:snippetVersion="1.0"
+              xmlns:ns0="http://www.bea.com/wli/sb/reference" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xmlns:ns1="urn:xyzbank:cust:wsdl:customer" xmlns:ns2="urn:xyzbank:cust:wsdl:order"
+              xmlns:ns3="urn:xyzbank:cust:wsdl:account">
+    <bpel:partnerLinks>
+        <bpel:partnerLink name="CustMigrationSplitJoin" partnerLinkType="tns:CustMigrationSplitJoin"
+                          myRole="CustMigrationSplitJoin">
+	       </bpel:partnerLink>
+        <bpel:partnerLink name="CustomerServiceBS" partnerLinkType="tns:CustomerServiceBS"
+                          partnerRole="CustomerServiceBS"/>
+        <bpel:partnerLink name="CustomerOrderServiceBS" partnerLinkType="tns:CustomerOrderServiceBS"
+                          partnerRole="CustomerOrderServiceBS"/>
+        <bpel:partnerLink name="CustomerAccountServiceBS" partnerLinkType="tns:CustomerAccountServiceBS"
+                          partnerRole="CustomerAccountServiceBS"/>
+    </bpel:partnerLinks>
+
+	   <bpel:variables>
+        <bpel:variable name="request"
+	                      messageType="bind:CustomerInfoRequest">
+	       </bpel:variable>
+	       <bpel:variable name="response"
+                       messageType="bind:CustomerInfoResponse">
+	       </bpel:variable>
+        <bpel:variable name="CustInfoResp" messageType="ns1:get_customer_resp"/>
+        <bpel:variable name="CustOrderResp" messageType="ns2:get_customer_orders_resp"/>
+        <bpel:variable name="CustAccResp" messageType="ns3:get_customer_accounts_resp"/>
+    </bpel:variables>
+
+    <bpel:sequence>
+        <bpel:receive partnerLink="CustMigrationSplitJoin" operation="GetCustomerInfo" variable="request" createInstance="yes">
+	           <rescon:receiveInfo>
+                <rescon:wsdl ref="XYZCustomer/WSDLs/CustMigrationSplitJoin" binding="bind:CustomerInfoServiceBinding"/>
+            </rescon:receiveInfo>
+        </bpel:receive>
+        <bpel:flow>
+            <bpel:scope bea:name="CustomerScope">
+                <bpel:variables>
+                    <bpel:variable name="CustInfoReq" messageType="ns1:get_customer_req"/>
+                </bpel:variables>
+                <bpel:sequence>
+                    <bpel:assign>
+                        <bpel:extensionAssignOperation>
+                            <trf:assign/>
+                        </bpel:extensionAssignOperation>
+                    </bpel:assign>
+                    <bpel:invoke partnerLink="CustomerServiceBS" operation="get_customer" inputVariable="CustInfoReq"
+                                 outputVariable="CustInfoResp">
+                        <rescon:invokeInfo>
+                            <rescon:service ref="XYZCommon/BusinessServices/CustomerServiceBS"
+                                            xsi:type="ns0:BusinessServiceRef"/>
+                        </rescon:invokeInfo>
+                    </bpel:invoke>
+                </bpel:sequence>
+            </bpel:scope>
+            <bpel:scope bea:name="OrderScope">
+                <bpel:variables>
+                    <bpel:variable name="CustOrderReq" messageType="ns2:get_customer_orders_req"/>
+                </bpel:variables>
+                <bpel:sequence>
+                    <bpel:invoke partnerLink="CustomerOrderServiceBS" operation="get_customer_orders"
+                                 inputVariable="CustOrderReq" outputVariable="CustOrderResp">
+                        <rescon:invokeInfo>
+                            <rescon:service ref="XYZCommon/BusinessServices/CustomerOrderServiceBS"
+                                            xsi:type="ns0:BusinessServiceRef"/>
+                        </rescon:invokeInfo>
+                    </bpel:invoke>
+                </bpel:sequence>
+            </bpel:scope>
+            <bpel:scope bea:name="AccountScope">
+                <bpel:variables>
+                    <bpel:variable name="CustAccReq" messageType="ns3:get_customer_accounts_req"/>
+                </bpel:variables>
+                <bpel:sequence>
+                    <bpel:invoke partnerLink="CustomerAccountServiceBS" operation="get_customer_accounts"
+                                 inputVariable="CustAccReq" outputVariable="CustAccResp">
+                        <rescon:invokeInfo>
+                            <rescon:service ref="XYZCommon/BusinessServices/CustomerAccountServiceBS"
+                                            xsi:type="ns0:BusinessServiceRef"/>
+                        </rescon:invokeInfo>
+                    </bpel:invoke>
+                </bpel:sequence>
+            </bpel:scope>
+        </bpel:flow>
+        <bpel:reply partnerLink="CustMigrationSplitJoin" operation="GetCustomerInfo" variable="response"></bpel:reply>
+    </bpel:sequence>
+</bpel:process>
